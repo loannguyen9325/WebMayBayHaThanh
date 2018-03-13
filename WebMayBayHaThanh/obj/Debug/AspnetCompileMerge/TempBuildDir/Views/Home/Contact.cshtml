@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Liên Hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css {
+    <style>
+        .flexslider.flexslider-banner .slides img {
+            display: block;
+            width: 100%;
+            max-height: 460px;
+        }
+    </style>
+}
+
+<section class="tm-banner">
+    <img src="~/Layout/Home/images/contact-banner.jpg" style="width:100%; height:260px;" alt="Image" />
+</section>
+
+<section class="tm-white-bg section-padding-bottom">
+    <div class="container">
+        <div class="row tm-black1-bg" style="margin:20px 10% 20px 10%; padding:40px 5% 40px 5%; min-height:1000px">
+            <table id="tblCompanyInfo"></table>
+            <div id="map" style="height:450px; width:100%; margin-top:30px">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1959.7918354822264!2d106.70537101994543!3d10.766534502148277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f69fac54ed5%3A0x84d741e32559c989!2zMjYgTmd1eeG7hW4gVOG6pXQgVGjDoG5oLCBwaMaw4budbmcgMTIsIFF14bqtbiA0LCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2shk!4v1497946846589" 
+                        width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(window).load(function() {
+		    $('.flexslider').flexslider({
+			    controlNav: false
+		    });
+        });
+
+        $(document).ready(function () {
+            Select_List_GeneralInfo();
+        });
+
+        function Select_List_GeneralInfo() {
+            document.getElementById("tblCompanyInfo").innerHTML = "";
+            $.getJSON("/Home/Select_List_GeneralInfo",
+            function (data) {
+                var table = $('<table>');
+                $.each(data, function (key, item) {
+                    tr = $('<tr/>');
+                    tr.append("<td style='font-size:22px; font-weight:bold; color:#0B3C5D'>" + item.CompanyName + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<td style='padding-top:25px; color:#666666'><i style='width:25px' class='fa fa-map-marker'></i>Địa chỉ: " + item.CompanyAddress + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<td style='padding-top:15px; color:#666666'><i style='width:25px' class='fa fa-envelope'></i>Email: " + item.CompanyMail + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<td style='padding-top:15px; color:#666666'><i style='width:25px' class='fa fa-phone-square'></i>Hotline: " + item.Hotline + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<td style='padding-top:15px; color:#666666'><i style='width:25px' class='fa fa-phone'></i>Số điện thoại: " + item.CompanyPhone + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<td style='padding-top:15px; color:#666666'><i style='width:25px' class='fa fa-fax'></i>Fax: " + item.CompanyFax + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<td style='padding-top:15px; color:#666666'><i style='width:25px' class='fa fa-clock-o'></i>Giờ làm việc: Mon - Fri: 8:00 - 17:30 | Sat: 8:00 - 16:00</td>");
+                    $(table).append(tr);
+                });
+                $('#tblCompanyInfo').append(table);
+            });
+        };
+    </script>
+}

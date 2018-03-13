@@ -1,0 +1,44 @@
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.pdb
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.pdb
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.pdb
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.csprojResolveAssemblyReference.cache
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.pdb
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.dll
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.pdb
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.dll
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.dll
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.pdb
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.pdb
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.csprojResolveAssemblyReference.cache
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.dll
+C:\WebMayBayHaThanh\WebMayBayHaThanh_NEW\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.pdb
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.dll
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.pdb
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.dll
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.dll
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.pdb
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.pdb
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.csprojResolveAssemblyReference.cache
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.dll
+C:\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.pdb
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Entities.pdb
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.DAL.pdb
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\MayBayHaThanh.Utilities.pdb
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.csprojResolveAssemblyReference.cache
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.Entities\obj\Release\MayBayHaThanh.Entities.pdb

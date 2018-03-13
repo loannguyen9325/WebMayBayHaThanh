@@ -1,0 +1,220 @@
+﻿@using System.Data;
+@model IEnumerable<WebMayBayHaThanh.Models.mProduct>
+@{
+    ViewBag.Title = "Dịch Vụ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css {
+    <style>
+        .flexslider.flexslider-banner .slides img {
+            display: block;
+            width: 100%;
+            max-height: 460px;
+        }
+    </style>
+}
+
+<section class="tm-banner">
+    <div class="flexslider flexslider-banner">
+        <ul class="slides">
+            @{
+                DataTable _tb = Session["ActiveBanner"] as DataTable;
+                foreach (DataRow rnhom in _tb.Rows)
+                {
+                    <li>
+                        <div class="tm-banner-inner">
+                            <a onclick="ShowPopup();" class="tm-banner-link">Tra cứu vé</a>
+                        </div>
+                        <img src="../../@rnhom["BannerUrl"]" alt="Image" />
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</section>
+
+<div class="modal fade" id="myModalPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#fff; background-color:#F5D338;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Lưu ý</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ProductID_Del" />
+                <span id="alertxoa">
+                    Thông tin tra cứu được từ trang web bạn đang truy cập chỉ mang tính chất tham khảo.<br />
+                    Vui lòng liên hệ số điện thoại <label id="lblPhone"></label> để được tư vấn và đặt vé.
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-info" style="background-color:#F9E58B; border-color:#F5D338; color:#000" onclick="HidePopup();"><i class="ace-icon fa fa-check bigger-40"></i> OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="tm-white-bg" style="min-height:1000px">
+    <div id="divProduct" class="container">
+        <div class="row">
+            <div class="tm-section-header1 section-margin-top1">
+                <div class="col-lg-3 col-md-3 col-sm-3"><hr></div>
+                <div id="divTitleProduct" class="col-lg-6 col-md-6 col-sm-6"></div>
+                <div class="col-lg-3 col-md-3 col-sm-3"><hr></div>
+            </div>
+        </div>
+        <div id="divListProduct" class="row" style="margin-top:5px">
+            @Html.Partial("_ListProduct", Model)
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(window).load(function() {
+		    $('.flexslider').flexslider({
+			    controlNav: false
+		    });
+        });
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.href);
+            if (results == null)
+                return "";
+            else
+                return decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        window.addEventListener("popstate", function (e) {
+            $.ajax({
+                url: location.href,
+                success: function (result) {
+                    $('#divListProduct').html(result);
+                }
+            });
+        });
+
+        function ChangeUrl(page, url) {
+            if (typeof (history.pushState) != "undefined") {
+                var obj = { Page: page, Url: url };
+                history.pushState(null, obj.Page, obj.Url);
+            } else {
+                alert("Browser does not support HTML5.");
+            }
+        }
+
+        $(function () {
+            Select_Top2_Consultant();
+            var ProductCategoryID = getParameterByName("id");
+            if (ProductCategoryID == '') {
+                ProductCategoryID = getParameterByName("ID");
+                if (ProductCategoryID == '') {
+                    ProductCategoryID = getParameterByName("Id");
+                    if (ProductCategoryID == '') {
+                        ProductCategoryID = getParameterByName("iD");
+                    }
+                }
+            }
+
+            var Keysearch = getParameterByName("key");
+            if (Keysearch == '') {
+                Keysearch = getParameterByName("KEY");
+                if (Keysearch == '') {
+                    Keysearch = getParameterByName("Key");
+                    if (Keysearch == '') {
+                        Keysearch = getParameterByName("kEy");
+                        if (Keysearch == '') {
+                            Keysearch = getParameterByName("keY");
+                            if (Keysearch == '') {
+                                Keysearch = getParameterByName("KEy");
+                                if (Keysearch == '') {
+                                    Keysearch = getParameterByName("kEY");
+                                    if (Keysearch == '') {
+                                        Keysearch = getParameterByName("KeY");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (ProductCategoryID == '' || ProductCategoryID == 1 || ProductCategoryID == 2 || ProductCategoryID == 3)
+            {
+                if (ProductCategoryID == 1) {
+                    $('#divTitleProduct').html('<h2 class="tm-section-title">VÉ - TOUR DU LỊCH QUỐC TẾ</h2>');
+                }
+                else if (ProductCategoryID == 2) {
+                    $('#divTitleProduct').html('<h2 class="tm-section-title">VÉ - TOUR DU LỊCH QUỐC NỘI</h2>');
+                }
+                else if (ProductCategoryID == 3) {
+                    $('#divTitleProduct').html('<h2 class="tm-section-title">VÉ - TOUR DU LỊCH KHUYẾN MÃI</h2>');
+                }
+                else if (ProductCategoryID == '') {
+                    $('#divTitleProduct').html('<h2 class="tm-section-title">VÉ - TOUR DU LỊCH</h2>');
+                }
+            }
+            else
+            {
+                window.location = '/Errors/General';
+            }
+
+            $('body').on('click', '#divListProduct .pagination a', function (event) {
+                event.preventDefault();
+                console.log('page');
+                var url;
+                if (ProductCategoryID != '' && Keysearch == '')
+                {
+                    url = $(this).attr('href') + "&id=" + ProductCategoryID;
+                }
+                else if (ProductCategoryID == '' && Keysearch != '')
+                {
+                    url = $(this).attr('href') + "&key=" + Keysearch;
+                }
+                else if (ProductCategoryID != '' && Keysearch != '') {
+                    url = $(this).attr('href') + "&id=" + ProductCategoryID + "&key=" + Keysearch;
+                }
+                else if (ProductCategoryID == '' && Keysearch == '') {
+                    url = $(this).attr('href');
+                }
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    success: function (result) {
+                        ChangeUrl('TicketAndTour', url);
+                        $('#divListProduct').html(result);
+                    }
+                });
+            });
+        });
+
+        function Select_Top2_Consultant() {
+            $.getJSON("/Home/Select_Top2_Consultant")
+            .done(function (data) {
+                if (data.length > 0) {
+                    var strPhone = "";
+                    $.each(data, function (key, item) {
+                        if (item.PhoneNo != "") {
+                            strPhone += item.PhoneNo + " - ";
+                        }
+                    });
+                    $('#lblPhone').text(strPhone.substring(0, strPhone.length - 3));
+                }
+            })
+        }
+
+        function ShowPopup() {
+            $('#myModalPopup').appendTo("body").modal('show');
+        }
+
+        function HidePopup() {
+            $('#myModalPopup').modal('hide');
+            location.href = "https://www.google.com/flights/?f=0&gl";
+            location.target = "_blank";
+            return false;
+        }
+    </script>
+}

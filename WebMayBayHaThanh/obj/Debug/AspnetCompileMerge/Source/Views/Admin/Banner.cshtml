@@ -1,0 +1,339 @@
+﻿@{
+    ViewBag.Title = "Cập Nhật Banner Website";
+    Layout = "~/Views/Shared/_AdminPage.cshtml";
+}
+
+@section css {
+    <!-- Kendo -->
+    <link href="~/Kendo/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="~/Kendo/styles/kendo.material.min.css" rel="stylesheet">
+    <!-- End Kendo -->
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Cập Nhật Banner Cho Website</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <form method="post" class="form-horizontal form-label-left" novalidate>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Banner <span class="required">*</span>
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12" style="padding-top:6px">
+                            <input type='file' id="imgImageUpload" name="imgImageUpload" accept="image/x-png,image/gif,image/jpeg" />
+                            <div style="padding-top:5px"><img id="divPreview" src="#" width="100%" height="350" alt="Hình ảnh được upload" style="display:none" /></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button id="btnSave" type="submit" class="btn btn-success" onclick="return Save();">Lưu</button>
+                            <button id="btnCancel" type="button" class="btn btn-primary" onclick="ClearInput()">Xoá</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Danh Sách Banner</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <div id="grid_List_Banner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalXoa">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#fff; background-color:#37619C;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xoá Banner</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="BannerID_Del" />
+                <span id="alertxoa">Bạn có chắc muốn xoá banner này?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-info" onclick="DeleteBanner()"><i class="ace-icon fa fa-trash bigger-40"></i> Xóa</button>
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="ace-icon fa fa-close bigger-70"></i> Huỷ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <!-- Kendo -->
+    <script src="~/Kendo/js/jszip.min.js" type="text/javascript"></script>
+    <script src="~/Kendo/js/kendo.all.min.js" type="text/javascript"></script>
+    <!-- End Kendo -->
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#divPreview').attr('src', e.target.result);
+                    $('#divPreview').attr('style', 'display:block');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgImageUpload").change(function () {
+            var val = $(this).val();
+            switch (val.substring(val.lastIndexOf('.') + 1).toLowerCase()) {
+                case 'gif': case 'jpg': case 'png':
+                    readURL(this);
+                    break;
+                default:
+                    $(this).val('');
+                    ShowAlert('Thông báo', 'Tệp vừa được chọn không hợp lệ.\r\nVui lòng chọn đúng định dạng hình ảnh.', 'error');
+                    break;
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            OnLoadGridBanner();
+        });
+
+        function OnLoadGridBanner() {
+            var dataSource = new kendo.data.DataSource({
+                pageSize: 10,
+                serverPaging: true,
+                serverSorting: true,
+                allowUnsort: true,
+                sort: {
+                    field: 'BannerID',
+                    dir: 'asc'
+                },
+                schema: {
+                    model: {
+                        id: "BannerID",
+                        fields: {
+                            BannerID: { type: "number", editable: false, nullable: true },
+                            BannerName: { type: "string", editable: false, nullable: true },
+                            IsActive: { type: "bool", editable: false, nullable: true },
+                            BannerUrl: { type: "string", editable: false, nullable: true },
+                            CreatedBy: { type: "number", editable: false, nullable: true },
+                            CreatedDate: { type: "string", editable: false, nullable: true },
+                            LastUpdatedBy: { type: "number", editable: false, nullable: true },
+                            LastUpdatedDate: { type: "string", editable: false, nullable: true },
+                        }
+                    },
+                    data: 'records',
+                    total: 'total'
+                },
+                transport: {
+                    read: {
+                        contentType: "application/json; charset=utf-8",
+                        url: "/Admin/Select_List_Banner",
+                        type: 'POST',
+                        dataType: "json"
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation == "read") {
+                            return JSON.stringify(options);
+                        }
+                    }
+                },
+            });
+
+            $("#grid_List_Banner").kendoGrid({
+                dataSource: dataSource,
+                noRecords: true,
+                messages: {
+                    noRecords: "Không có kết quả nào được tìm thấy!"
+                },
+                sortable: true,
+                scrollable: true,
+                pageable: {
+                    buttonCount: 3,
+                    input: true,
+                    messages: {
+                        display: 'Dòng {0} - {1} / {2} dòng',
+                        empty: 'Không có dữ liệu',
+                        first: 'Trang đầu',
+                        itemsPerPage: 'dòng / trang',
+                        last: 'Trang cuối',
+                        next: 'Trang sau',
+                        of: '/ {0} trang',
+                        page: 'Trang',
+                        previous: 'Trang trước'
+                    },
+                    pageSize: 10,
+                    pageSizes: [10, 20, 50]
+                },
+                selectable: "row",
+                columns: [
+                //{
+                //    field: "BannerID",
+                //    title: "STT",
+                //    width: 50,
+                //    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                //    headerAttributes: {
+                //        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                //    }
+                //},
+                {
+                    field: "BannerUrl",
+                    title: "Hình ảnh banner",
+                    width: 200,
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    template: "<img src=\'../../#= BannerUrl #\' width='230px' height='120px'/>",
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    width: 150,
+                    template: "# if (IsActive == true) { #" + "<a onclick='UpdateBanner(#= BannerID #, #= IsActive #);' class='btn btn-xs btn-info'><i class='ace-icon fa fa-edit bigger-40'></i>&nbsp;&nbsp;Ẩn</a>" + "# } else { #" + "<a onclick='UpdateBanner(#= BannerID #, #= IsActive #);' class='btn btn-xs btn-info'><i class='ace-icon fa fa-edit bigger-40'></i>&nbsp;&nbsp;Hiện</a>" + "# } #" + "&nbsp;&nbsp;<a onclick='ShowDelete(#= BannerID #);' class='btn btn-xs btn-danger'><i class='ace-icon fa fa-trash bigger-40'></i> Xóa</a>",
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                }]
+            }).data("kendoGrid");
+        }
+
+        function Save() {
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            var files = $("#imgImageUpload").get(0).files;
+            if (files.length > 0)
+            {
+                fd.append("ImageFile", files[0]);
+                fd.append("LOAI", "INSERT");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/CapNhatBanner',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function (html) {
+                        $('#loading').fadeOut();
+                        if (html == "...") {
+                            $(':input')
+                                .removeAttr('checked')
+                                .removeAttr('selected')
+                                .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                                .val('');
+                            $('#grid_List_Banner').data('kendoGrid').dataSource.read();
+                            ClearInput();
+                            ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                        }
+                        else {
+                            ShowAlert('Lỗi', html, 'error');
+                        }
+                    },
+                })
+                .fail(
+                    function (jqXHR, textStatus, err) {
+                        $('#loading').fadeOut();
+                        ShowAlert('Lỗi', err, 'error');
+                    }
+                );
+            }
+            else
+            {
+                $('#loading').fadeOut();
+                ShowAlert('Thông báo', 'Vui lòng chọn hình ảnh', 'info');
+            }
+            return false;
+        }
+
+        function UpdateBanner(BannerID, IsActive) {
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            fd.append("BannerID", BannerID);
+            fd.append("IsActive", IsActive);
+            fd.append("LOAI", "UPDATE");
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CapNhatBanner',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        $('#grid_List_Banner').data('kendoGrid').dataSource.read();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+            return false;
+        };
+
+        function ShowDelete(BannerID) {
+            $('#BannerID_Del').val(BannerID);
+
+            $('#myModalXoa').appendTo("body").modal('show');
+        }
+
+        function DeleteBanner() {
+            $('#myModalXoa').modal('hide');
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            fd.append("BannerID", $('#BannerID_Del').val());
+            fd.append("LOAI", "DELETE");
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CapNhatBanner',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        $('#grid_List_Banner').data('kendoGrid').dataSource.read();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+        };
+
+        function ClearInput() {
+            document.getElementById("imgImageUpload").value = "";
+            $('#divPreview').attr('style', 'display:none');
+        };
+    </script>
+}

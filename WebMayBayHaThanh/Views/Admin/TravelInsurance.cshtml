@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Cập Nhật Bảo Hiểm Du Lịch";
+    Layout = "~/Views/Shared/_AdminPage.cshtml";
+}
+
+@section css {
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Cập Nhật Bảo Hiểm Du Lịch</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <form method="post" class="form-horizontal form-label-left" novalidate>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <textarea id="txtEditor"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button id="btnSave" type="submit" class="btn btn-success" onclick="return Save();">Lưu</button>
+                            <button id="btnCancel" type="button" class="btn btn-primary" onclick="ClearInput()">Xoá</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Nội Dung Hiện Hành</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <div id="ShowButtonUpdate"></div>
+                <div id="ShowContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            document.getElementById("btnSave").disabled = true;
+            $("#txtEditor").Editor();
+            Select_TravelInsurance();
+        });
+
+        function Select_TravelInsurance() {
+            document.getElementById("ShowContent").html = "";
+            document.getElementById("ShowButtonUpdate").html = "";
+            $.getJSON("/Admin/Select_TravelInsurance",
+            function (data) {
+                $.each(data, function (key, item) {
+                    $('#ShowContent').html(item.TravelInsuranceDecode);
+                    $('#ShowButtonUpdate').html("<a onclick='ShowUpdate();' class='btn btn-xs btn-info'><i class='ace-icon fa fa-edit bigger-40'></i>&nbsp;&nbsp;Sửa</a>");
+                });
+            });
+        };
+
+        function ShowUpdate() {
+            $('#txtEditor').Editor("setText", $('#ShowContent').html());
+            document.getElementById("btnSave").disabled = false;
+        };
+
+        function Save() {
+            $('#loading').fadeIn();
+            if ($('#txtEditor').Editor("getText") != "" && $('#txtEditor').Editor("getText") != " " && $('#txtEditor').Editor("getText") != "<p>/<p>")
+            {
+                var fd = new FormData();
+                fd.append("TravelInsurance", $('#txtEditor').Editor("getText").replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/CapNhatBaoHiemDuLich',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function (html) {
+                        $('#loading').fadeOut();
+                        if (html == "...") {
+                            $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                            Select_TravelInsurance();
+                            ClearInput();
+                            ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                        }
+                        else {
+                            ShowAlert('Lỗi', html, 'error');
+                        }
+                    },
+                })
+                .fail(
+                    function (jqXHR, textStatus, err) {
+                        $('#loading').fadeOut();
+                        ShowAlert('Lỗi', err, 'error');
+                    }
+                );
+            }
+            else
+            {
+                $('#loading').fadeOut();
+                ShowAlert('Thông báo', 'Vui lòng nhập thông tin bảo hiểm du lịch', 'info');
+            }
+            return false;
+        }
+
+        function ClearInput() {
+            $('#txtEditor').Editor("setText", '<p></p>');
+            document.getElementById("btnSave").disabled = true;
+        };
+    </script>
+}

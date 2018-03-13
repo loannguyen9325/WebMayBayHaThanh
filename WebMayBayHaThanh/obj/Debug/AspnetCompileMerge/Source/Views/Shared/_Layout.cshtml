@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | CÔNG TY TNHH MTV TƯ VẤN ĐẦU TƯ XÂY DỰNG THƯƠNG MẠI HÀ THÀNH</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Old+Standard+TT|Pattaya|Quicksand|Yeseva+One" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700' rel='stylesheet' type='text/css'>
+    <link href="~/Layout/Home/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Layout/Home/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Layout/Home/css/flexslider.css" rel="stylesheet">
+    <link href="~/Layout/Home/css/templatemo-style.css" rel="stylesheet">
+    @RenderSection("css", required: false)
+</head>
+<body class="tm-blue-bg">
+    <a class="scrollToTop" style="background-color:#FCDD44" href="/"><i class="fa fa-chevron-up"></i></a>
+    <div class="tm-header">
+        <div class="container">
+            <div class="row">
+                @*<div id="divLogo" class="col-lg-1 col-md-4 col-sm-3 tm-site-name-container"></div>*@
+                @*<div class="col-lg-11 col-md-8 col-sm-9">
+                    <section class="navigation">
+                        <div class="nav-container">
+                            <div class="brand">
+                                <a href="#!">Logo</a>
+                            </div>
+                            <nav>
+                                <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
+                                <ul class="nav-list">
+                                    <li><a href="/About">Giới Thiệu</a></li>
+                                    <li>
+                                        <a href="#">Dịch Vụ</a>
+                                        <ul class="nav-dropdown">
+                                            <li><a href="/TicketAndTour?id=1">Vé - Tour Quốc Tế</a></li>
+                                            <li><a href="/TicketAndTour?id=2">Vé - Tour Quốc Nội</a></li>
+                                            <li><a href="/TicketAndTour?id=3">Vé - Tour Khuyến Mãi</a></li>
+                                            <li><a href="/HotelService">Dịch Vụ Khách Sạn</a></li>
+                                            <li><a href="/Visa">Thông Tin Visa</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/BookingAndPayment">Hướng Dẫn Đặt Vé - Thanh Toán</a></li>
+                                    <li><a href="/News">Tin Khuyến Mãi</a></li>
+                                    <li><a href="/Contact">Liên Hệ</a></li>
+                                    <li style="color:#FCDD44; font-size:20px"><div id="divHotline"></div></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </section>
+                    @*<nav class="tm-nav">
+                        <ul>
+                            <li><a href="/About">Giới Thiệu</a></li>
+                            <li><a href="#">Dịch Vụ&nbsp;&nbsp;<span class="fa fa-caret-down"></span></a>
+                                <ul>
+                                    <li><a href="/TicketAndTour?id=1">Vé - Tour Quốc Tế</a></li>
+                                    <li><a href="/TicketAndTour?id=2">Vé - Tour Quốc Nội</a></li>
+                                    <li><a href="/TicketAndTour?id=3">Vé - Tour Khuyến Mãi</a></li>
+                                    <li><a href="/HotelService">Dịch Vụ Khách Sạn</a></li>
+                                    <li><a href="/Visa">Thông Tin Visa</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/BookingAndPayment">Hướng Dẫn Đặt Vé - Thanh Toán</a></li>
+                            <li><a href="/News">Tin Khuyến Mãi</a></li>
+                            <li><a href="/Contact">Liên Hệ</a></li>
+                            <li style="color:#FCDD44; float:right; font-size:20px"><div id="divHotline"></div></li>
+                        </ul>
+                    </nav>
+                    <nav>
+                                <div class="nav-mobile"><a id="nav-toggle" href="#!"><span class="navspan"></span></a></div>
+                        <ul class="nav-list">
+                            <li><a href="/About">Giới Thiệu</a></li>
+                            <li>
+                                <a href="#">Dịch Vụ</a>
+                                <ul class="nav-dropdown">
+                                    <li><a href="/TicketAndTour?id=1">Vé - Tour Quốc Tế</a></li>
+                                    <li><a href="/TicketAndTour?id=2">Vé - Tour Quốc Nội</a></li>
+                                    <li><a href="/TicketAndTour?id=3">Vé - Tour Khuyến Mãi</a></li>
+                                    <li><a href="/HotelService">Dịch Vụ Khách Sạn</a></li>
+                                    <li><a href="/Visa">Thông Tin Visa</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/BookingAndPayment">Hướng Dẫn Đặt Vé - Thanh Toán</a></li>
+                            <li><a href="/News">Tin Khuyến Mãi</a></li>
+                            <li><a href="/Contact">Liên Hệ</a></li>
+                            <li style="color:#FCDD44; font-size:20px"><div id="divHotline"></div></li>
+                        </ul>
+                    </nav>
+                </div>*@
+                <section class="navigation col-lg-12 col-md-12 col-sm-12">
+                    <div class="nav-container">
+                        <div class="brand">
+                            <div id="divLogo"></div>
+                        </div>
+                        <nav>
+                            <div class="nav-mobile"><a id="nav-toggle" href="#"><span class="navspan"></span></a></div>
+                            <ul class="nav-list">
+                                <li><a href="/About">Giới Thiệu</a></li>
+                                <li>
+                                    <a href="#">Dịch Vụ</a>
+                                    <ul class="nav-dropdown">
+                                        <li><a href="/TicketAndTour?id=1">Vé - Tour Quốc Tế</a></li>
+                                        <li><a href="/TicketAndTour?id=2">Vé - Tour Quốc Nội</a></li>
+                                        <li><a href="/TicketAndTour?id=3">Vé - Tour Khuyến Mãi</a></li>
+                                        <li><a href="/HotelService">Dịch Vụ Khách Sạn</a></li>
+                                        <li><a href="/TravelInsurance">Bảo Hiểm Du Lịch</a></li>
+                                        <li><a href="/Visa">Thông Tin Visa</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="/BookingAndPayment">Hướng Dẫn Đặt Vé - Thanh Toán</a></li>
+                                <li><a href="/News">Tin Khuyến Mãi</a></li>
+                                <li><a href="/Contact">Liên Hệ</a></li>
+                                <li style="color:#FCDD44; font-size:20px"><div id="divHotline"></div></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div style="width:100%">
+        @RenderBody()
+    </div>
+    <footer class="tm-black-bg">
+        <div class="container">
+            <div class="row">
+                <div id="divFooter" class="col-lg-7"></div>
+                <div class="col-lg-3">
+                    <p class="tm-copyright-text-left">
+                        <b><span style="line-height:1.5; color:#FCDD44">Về chúng tôi</span></b><br /><br />
+                        <span style="line-height:2">
+                            <a href="/About" style="color:inherit">Giới Thiệu</a><br />
+                            <a href="/TicketAndTour" style="color:inherit">Vé - Tour Du Lịch</a><br />
+                            <a href="/HotelService" style="color:inherit">Dịch Vụ Khách Sạn</a><br />
+                            <a href="/BookingAndPayment" style="color:inherit">Đặt Vé - Thanh Toán</a><br />
+                            <a href="/TravelInsurance" style="color:inherit">Bảo Hiểm Du Lịch</a>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-lg-2">
+                    <p class="tm-copyright-text-left">
+                        <b><span style="line-height:1.5; color:#FCDD44">Đối tác hàng không</span></b><br /><br />
+                        <span style="line-height:2">
+                            Eva<br />
+                            Air Asia<br />
+                            United Airline<br />
+                            Vietjet Air<br />
+                            Vietnam Airline
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div style="background-color:#1D2731">
+        <p class="tm-copyright-text">
+            Copyright &copy; @DateTime.Now.Year PHÒNG VÉ MÁY BAY HÀ THÀNH
+        </p>
+    </div>
+    <script type="text/javascript" src="~/Layout/Home/scripts/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="~/Layout/Home/scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Layout/Home/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Layout/Home/scripts/jquery.flexslider-min.js"></script>
+    <script type="text/javascript" src="~/Layout/Home/scripts/templatemo-script.js"></script>
+    <script type="text/javascript" src="~/Layout/Admin/build/js/custom.min.js"></script>
+    <script type="text/javascript" src="~/Layout/Admin/vendors/jqvmap/dist/jquery.vmap.js"></script>
+    <script type="text/javascript" src="~/Layout/Admin/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+    <script type="text/javascript" src="~/Layout/Admin/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+    <script type="text/javascript" src="~/Layout/Home/scripts/Menu.js"></script>
+    <script type="text/javascript">
+        jQuery(window).scroll(function () {
+            if ($(this).scrollTop() > 300) {
+                $('.scrollToTop').fadeIn();
+            } else {
+                $('.scrollToTop').fadeOut();
+            }
+        });
+
+        jQuery('.scrollToTop').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            LoadGeneralInfo();
+        });
+
+        function LoadGeneralInfo() {
+            $.getJSON("/Home/Select_List_GeneralInfo")
+            .done(function (data) {
+                var strLogo = "";
+                var strHotline = "";
+                var strFooter = "";
+                $.each(data, function (key, item) {
+                    strLogo += "<a href='/'><img src='../../" + item.Logo + "' width='80' height='50'/></a>";
+                    $('#divLogo').html(strLogo);
+                    strHotline += "<i class='fa fa-phone'></i>&nbsp;<b>" + item.Hotline + "</b>";
+                    $('#divHotline').html(strHotline);
+                    strFooter += "<p class='tm-copyright-text-left'>";
+                    strFooter += "<b><span style='line-height:1.5; color:#FCDD44; text-transform:uppercase'>" + item.CompanyName + "</span></b><br /><br />";
+                    strFooter += "<span style='line-height:2'>";
+                    strFooter += "<i style='width:25px' class='fa fa-map-marker'></i>Địa chỉ: " + item.CompanyAddress + "<br />";
+                    strFooter += "<i style='width:25px' class='fa fa-phone'></i>Điên thoại: " + item.CompanyPhone + " - Fax: " + item.CompanyFax + "<br />";
+                    strFooter += "<i style='width:25px' class='fa fa-envelope'></i>Email: " + item.CompanyMail + "<br />";
+                    strFooter += "<i style='width:25px' class='fa fa-clock-o'></i>Giờ mở cửa: Mon - Fri: 8:00 - 17:30 / Sat: 8:00 - 16:00<br />";
+                    strFooter += "<i style='width:25px' class='fa fa-globe'></i>Website: <a href='http://phongvemaybayhathanh.com'>phongvemaybayhathanh.com</a>";
+                    strFooter += "</span></p>";
+                    $('#divFooter').html(strFooter);
+                });
+            });
+        };
+    </script>
+</body>
+</html>

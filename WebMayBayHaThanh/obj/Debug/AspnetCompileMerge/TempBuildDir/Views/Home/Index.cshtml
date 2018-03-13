@@ -1,0 +1,484 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "Trang Chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css {
+    <link href="~/Layout/Admin/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+    <style>
+        .flexslider.flexslider-banner .slides img{
+            display: block;
+            width: 100%;
+            max-height: 460px;
+        }
+        .scrollingtext a {
+            font-size: 18px;
+            color: #000;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .scrollingtext a:hover {
+            color: #0B3C5D;
+        }
+    </style>
+}
+
+<section class="tm-banner">
+    <div id="divBannerActive" class="flexslider flexslider-banner">
+        <ul id="ulbanner" class="slides">
+            @{
+                DataTable _tb = Session["ActiveBanner"] as DataTable;
+                foreach (DataRow rnhom in _tb.Rows)
+                {
+                    <li>
+                        <div class="tm-banner-inner">
+                            <a onclick="ShowPopup();" class="tm-banner-link" style="margin-top:-30px">Tra cứu vé</a>
+                        </div>
+                        <img src="../../@rnhom["BannerUrl"]" alt="Image" />
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</section>
+
+<div class="modal fade" id="myModalPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#fff; background-color:#F5D338;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Lưu ý</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ProductID_Del" />
+                <span id="alertxoa">Thông tin tra cứu được từ trang web bạn đang truy cập chỉ mang tính chất tham khảo.<br />
+                                    Vui lòng liên hệ số điện thoại <label id="lblPhone"></label> để được tư vấn và đặt vé.
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-info" style="background-color:#F9E58B; border-color:#F5D338; color:#000" onclick="HidePopup();"><i class="ace-icon fa fa-check bigger-40"></i> OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container tm-home-section-1" id="more">
+    <div class="row" style="clear:both">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="tm-home-box-1a">
+                @*<ul class="nav nav-tabs" role="tablist" id="SearchTabs">
+                    <li role="presentation" class="active" style="max-width:50%; min-width:15%">
+                        <a href="#ticket" aria-controls="ticket" role="tab" data-toggle="tab">Vé Máy Bay</a>
+                    </li>
+                    <li role="presentation" style="max-width:25%; min-width:15%">
+                        <a href="#tour" aria-controls="tour" role="tab" data-toggle="tab">Tour</a>
+                    </li>
+                    <li role="presentation" style="max-width:25%; min-width:15%">
+                        <a href="#visa" aria-controls="visa" role="tab" data-toggle="tab">Visa</a>
+                    </li>
+                </ul>*@
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active tm-white-bg" id="ticket">
+                        <div class="tm-search-box tm-gray-bg">
+                            <form class="hotel-search-form">
+                                <div class="tm-form-inner">
+                                    <div class="form-group col-lg-1 col-md-1 col-sm-12">
+                                    </div>
+                                    <div class="form-group col-lg-8 col-md-8 col-sm-12">
+                                        <input id="txtSearch_Ticket" class="form-control" placeholder="Nhập thông tin cần tìm tại đây" type="text" onkeypress="return searchKeyPress(event);">
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-3 col-sm-12">
+                                        <button id="btnSearch_Ticket" type="button" class="tm-yellow-btn" onclick="return Search();">Tra cứu thông tin</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    @*<div role="tabpanel" class="tab-pane fade tm-white-bg" id="tour">
+                        <div class="tm-search-box">
+                            <form action="#" method="post" class="hotel-search-form">
+                                <div class="tm-form-inner">
+                                    <div class="form-group col-lg-1 col-md-1 col-sm-12">
+                                    </div>
+                                    <div class="form-group col-lg-8 col-md-8 col-sm-12">
+                                        <input id="txtSearch_Tour" class="form-control" placeholder="Nhập từ khoá tại đây" type="text">
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-3 col-sm-12">
+                                        <button id="btnSearch_Tour" type="button" class="tm-yellow-btn" onclick="location.href='@Url.Action("TicketAndTour","Home")?TYP=1&Key=' + document.getElementById('txtSearch_Tour').value;">Tra cứu thông tin</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade tm-white-bg" id="visa">
+                        <div class="tm-search-box">
+                            <form action="#" method="post" class="hotel-search-form">
+                                <div class="tm-form-inner">
+                                    <div class="form-group col-lg-1 col-md-1 col-sm-12">
+                                    </div>
+                                    <div class="form-group col-lg-8 col-md-8 col-sm-12">
+                                        <select id="cmbCountryVisa" class="form-control" data-live-search="true"></select>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-3 col-sm-12">
+                                        <button id="btnSearch_Visa" type="submit" name="submit" class="tm-yellow-btn">Tra cứu thông tin</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="clear:both">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="tm-home-box-1a" style="background-color: rgba(252, 221, 68, 1); height:45px">
+                <div class="col-lg-12 col-md-12 col-sm-12" style="padding: 10px 5%">
+                    <marquee behavior="scroll" direction="left" scrolldelay="0" scrollamount="10" class="scrollingtext">
+                        @{
+                            DataTable _tb1 = Session["ListNews"] as DataTable;
+                            foreach (DataRow rnhom1 in _tb1.Rows)
+                            {
+                                <span style="padding-right:50px; color:#000; font-weight:bold"><a href="/Details?typ=3&id=@rnhom1["NewsID"]" target="_blank">@rnhom1["NewsTitle"]</a></span>;
+                            }
+                        }
+                    </marquee>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:50px">
+        <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="tm-home-box-1 tm-home-box-1-2">
+                <div style="height:100%; z-index:1; position: relative;">
+                    <img src="~/Layout/Home/images/index-01.jpg" alt="image" style="display:block;width:100%;height:100%">
+                </div>
+                <div style="z-index:2; position: relative;margin-top:-87px;">
+                    <a href="/TicketAndTour?id=3" target="_blank">
+                        <div id="divTotalSalePost" class="tm-blue-gradient-bg tm-city-price-container"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="tm-home-box-1 tm-home-box-1-center">
+                <div style="height:48%; z-index:1; position: relative;">
+                    <img src="~/Layout/Home/images/index-06.jpg" alt="image" style="display:block;width:100%;height:100%">
+                </div>
+                <div style="z-index:2; position: relative;margin-top:-87px;">
+                    <a href="/TicketAndTour?id=1" target="_blank">
+                        <div id="divTotalForeignPost" class="tm-blue-gradient-bg tm-city-price-container"></div>
+                    </a>
+                </div>
+                <div style="height:48%; margin-top:4%; z-index:1; position: relative;">
+                    <img src="~/Layout/Home/images/index-02.jpg" alt="image" style="display:block;width:100%;height:100%">
+                </div>
+                <div style="z-index:2; position: relative;margin-top:-87px;">
+                    <a href="/TicketAndTour?id=2" target="_blank">
+                        <div id="divTotalDomesticPost" class="tm-blue-gradient-bg tm-city-price-container"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="tm-home-box-1 tm-home-box-1-2 tm-home-box-1-right">
+                <div style="height:100%; z-index:1; position: relative;">
+                    <img src="~/Layout/Home/images/index-01.jpg" alt="image" style="display:block;width:100%;height:100%">
+                </div>
+                <div style="z-index:2; position: relative;margin-top:-87px;">
+                    <a href="/Others" target="_blank">
+                        <div id="divTotalOtherPost" class="tm-blue-gradient-bg tm-city-price-container"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="tm-white-bg">
+    <div class="container">
+        <div class="row">
+            <div class="tm-section-header section-margin-top">
+                <div class="col-lg-3 col-md-3 col-sm-3"><hr></div>
+                <div class="col-lg-6 col-md-6 col-sm-6"><h2 class="tm-section-title">Sản Phẩm - Dịch Vụ Mới Nhất</h2></div>
+                <div class="col-lg-3 col-md-3 col-sm-3"><hr></div>
+            </div>
+        </div>
+        <div id="divTop8NewestPost" class="row"></div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="tm-section-header section-margin-top">
+            <div class="col-lg-3 col-md-3 col-sm-3"><hr></div>
+            <div class="col-lg-6 col-md-6 col-sm-6"><h2 class="tm-section-title">Giá Vé Rẻ Nhất Trong Tháng</h2></div>
+            <div class="col-lg-3 col-md-3 col-sm-3"><hr></div>
+        </div>
+    </div>
+    <div id="divTop8CheapestPost" class="row"></div>
+    <div style="margin-bottom:30px">
+        <div class="col-lg-12">
+            <p class="home-description">Là đại lý chính thức của tất cả các hãng hàng không, bạn muốn đặt vé giá rẻ, vé khuyến mãi, vé đi du lịch trong nước hoặc vé đi du lịch, du học tại nước ngoài (Úc, Singapore, Thái Lan, Mỹ, Pháp, Hong Kong,...) hãy nhấc máy lên và liên hệ ngay cho chúng tôi. Bạn sẽ cảm thấy hài lòng.</p>
+        </div>
+    </div>
+</div>
+
+<section class="tm-white-bg">
+    <div class="container">
+        <div class="row">
+            <div class="tm-section-header section-margin-top">
+                <div class="col-lg-4 col-md-3 col-sm-3"><hr></div>
+                <div class="col-lg-4 col-md-6 col-sm-6"><h2 class="tm-section-title">Liên Hệ</h2></div>
+                <div class="col-lg-4 col-md-3 col-sm-3"><hr></div>
+            </div>
+            <div class="tm-section-header section-margin-top">
+                <div class="col-lg-3 col-md-12 col-sm-12" id="divTop2Consultant"></div>
+                <div class="col-lg-9 col-md-12 col-sm-12">
+                    <div id="world-map-gdp" style="height:400px; width:98%; margin-left:2%; text-align:center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(function() {
+            $('#SearchTabs a').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+			})
+
+		  	$('a[href*=#]:not([href=#])').click(function() {
+                if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                    if (target.length) {
+                        $('html,body').animate({
+                            scrollTop: target.offset().top
+                        }, 1000);
+			            return false;
+                    }
+                }
+		    });
+		});
+
+        $(window).load(function() {
+		    $('.flexslider').flexslider({
+			    controlNav: false
+		    });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            Select_List_VisaCountry();
+            Select_Total_Sale_Post();
+            Select_Total_Foreign_Post();
+            Select_Total_Domestic_Post();
+            Select_Total_Other_Post();
+            Select_Top8_Newest_Post();
+            Select_Top8_Cheapest_Post();
+            Select_Top2_Consultant();
+        });
+
+        function Select_List_VisaCountry() {
+            $.getJSON("/Home/Select_List_VisaCountry")
+            .done(function (data) {
+                $('#cmbCountryVisa').empty();
+                $("<option value=" + 0 + ">--- Chọn quốc gia ---</option>").appendTo($('#cmbCountryVisa'));
+                $.each(data, function (key, item) {
+                    $("<option value=" + item.CountryID + ">" + item.CountryName + " </option>").appendTo($('#cmbCountryVisa'));
+                });
+            });
+        }
+
+        function Select_Total_Sale_Post() {
+            document.getElementById("divTotalSalePost").html = "";
+            $.getJSON("/Home/Select_Total_Sale_Post",
+            function (data) {
+                $.each(data, function (key, item) {
+                    $('#divTotalSalePost').html('<span>KHUYẾN MÃI</span><span>' + item.TotalSalePost + ' bài đăng</span>');
+                });
+            });
+        };
+
+        function Select_Total_Foreign_Post() {
+            document.getElementById("divTotalForeignPost").html = "";
+            $.getJSON("/Home/Select_Total_Foreign_Post",
+            function (data) {
+                $.each(data, function (key, item) {
+                    $('#divTotalForeignPost').html('<span>QUỐC TẾ</span><span>' + item.TotalForeignPost + ' bài đăng</span>');
+                });
+            });
+        };
+
+        function Select_Total_Domestic_Post() {
+            document.getElementById("divTotalDomesticPost").html = "";
+            $.getJSON("/Home/Select_Total_Domestic_Post",
+            function (data) {
+                $.each(data, function (key, item) {
+                    $('#divTotalDomesticPost').html('<span>QUỐC NỘI</span><span>' + item.TotalDomesticPost + ' bài đăng</span>');
+                });
+            });
+        };
+
+        function Select_Total_Other_Post() {
+            document.getElementById("divTotalOtherPost").html = "";
+            $.getJSON("/Home/Select_Total_Other_Post",
+            function (data) {
+                $.each(data, function (key, item) {
+                    $('#divTotalOtherPost').html('<span>KHÁC</span><span>' + item.TotalOtherPost + ' bài đăng</span>');
+                });
+            });
+        };
+
+        function Select_Top8_Newest_Post() {
+            $.getJSON("/Home/Select_Top8_Newest_Post")
+            .done(function (data) {
+                if (data.length > 0) {
+                    var strList = "";
+                    $.each(data, function (key, item) {
+                        strList += "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-6 col-xxs-12'>";
+                        strList += "<div class='tm-home-box-2'>";
+                        if (item.ProductStatus == 1) {
+                            strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>HOT</div></div>";
+                        }
+                        else if (item.ProductStatus == 2) {
+                            strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>NEW</div></div>";
+                        }
+                        else if (item.ProductStatus == 3) {
+                            strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>SALE</div></div>";
+                        }
+                        strList += "<img src='../../" + item.ProductImage + "' style='width:100%; height:70%' alt='image' class='img-responsive'/>";
+                        strList += "<div style='height:50px'><a href='/Details?typ=1&id=" + item.ProductID + "'><h3>" + item.ProductName + "</h3></a></div>";
+                        strList += "<p class='tm-date' style='font-size:12px'><i style='width:15px'></i><span><i class='fa fa-plane'></i>&nbsp;" + item.BrandName + "</span><span style='float:right'><i class='fa fa-clock-o'></i>&nbsp;" + item.CreatedDate + "</span></p>";
+                        strList += "</div>";
+                        strList += "</div>";
+                        $('#divTop8NewestPost').html(strList);
+                    });
+                }
+            })
+        }
+
+        function Select_Top8_Cheapest_Post() {
+            $.getJSON("/Home/Select_Top8_Cheapest_Post")
+            .done(function (data) {
+                if (data.length > 0) {
+                    var strList = "";
+                    $.each(data, function (key, item) {
+                        strList += "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-6 col-xxs-12'>";
+                        strList += "<div class='tm-home-box-2'>";
+                        if (item.ProductStatus == 1) {
+                            strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>HOT</div></div>";
+                        }
+                        else if (item.ProductStatus == 2) {
+                            strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>NEW</div></div>";
+                        }
+                        else if (item.ProductStatus == 3) {
+                            strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>SALE</div></div>";
+                        }
+                        strList += "<img src='../../" + item.ProductImage + "' style='width:100%; height:70%' alt='image' class='img-responsive'/>";
+                        strList += "<div style='height:50px'><a href='/Details?typ=1&id=" + item.ProductID + "'><h3>" + item.LeavingFromName + "&nbsp;&nbsp;<i class='fa fa-exchange'></i>&nbsp;&nbsp;" + item.GoingToName + "</h3></a></div>";
+                        strList += "<p class='tm-date' style='font-size:12px'><i style='width:15px'></i><span><i class='fa fa-plane'></i>&nbsp;" + item.BrandName + "</span><span style='float:right'>" + item.FormattedProductPrice + " VND</span></p>";
+                        strList += "</div>";
+                        strList += "</div>";
+                        $('#divTop8CheapestPost').html(strList);
+                    });
+                }
+            })
+        }
+
+        function Select_Top2_Consultant() {
+            $.getJSON("/Home/Select_Top2_Consultant")
+            .done(function (data) {
+                if (data.length > 0) {  
+                    var strList = "";
+                    var strPhone = "";
+                    $.each(data, function (key, item) {
+                        strList += "<div class='col-lg-12 col-md-6 col-sm-6'>";
+                        strList += "<div>";
+                        strList += "<div>";
+                        strList += "<p class='tm-home-box-3-description' style='padding-top:0'>";
+                        if (item.Gender == 1)
+                        {
+                            strList += "<span style='line-height:3'><b>Ms. " + item.FullName + "</b></span><br />";
+                        }
+                        else if (item.Gender == 0) {
+                            strList += "<span style='line-height:3'><b>Mr. " + item.FullName + "</b></span><br />";
+                        }
+                        strList += "<span style='line-height:2'>";
+                        if (item.DeskphoneNo != "") {
+                            strList += "<i style='width:15px' class='fa fa-phone'></i>| " + item.DeskphoneNo + "<br />";
+                        }
+                        if (item.PhoneNo != "") {
+                            strList += "<i style='width:15px' class='fa fa-tablet'></i>| " + item.PhoneNo + "<br />";
+                            strPhone += item.PhoneNo + " - ";
+                        }
+                        if (item.EmailAddress != "") {
+                            strList += "<i style='width:15px' class='fa fa-envelope'></i>| <a href='mailto:" + item.EmailAddress + "'>" + item.EmailAddress + "</a>";
+                        }
+                        strList += "</span>";
+                        strList += "<div style='padding-left:20px; padding-top:5px; padding-bottom:25px'>";
+                        strList += "<a href='skype:" + item.SkypeAccount + "?chat'><img src='../../Layout/Home/images/iconskype.png' alt='' style='width:60px; height:25px' /></a>";
+                        strList += "</div></p></div></div></div>";
+                        //strList += "<div class='col-lg-6'>";
+                        //strList += "<div class='tm-home-box-3'>";
+                        //strList += "<div class='tm-home-box-3-img-container'>";
+                        //strList += "<img src='../../" + item.UserImage + "' alt='image' class='img-responsive'>";
+                        //strList += "</div>";
+                        //strList += "<div class='tm-home-box-3-info'>";
+                        //strList += "<p class='tm-home-box-3-description'>";
+                        //if (item.Gender == 1)
+                        //{
+                        //    strList += "<span style='line-height:3'>Ms. " + item.FullName + "</span><br />";
+                        //}
+                        //else if (item.Gender == 0) {
+                        //    strList += "<span style='line-height:3'>Mr. " + item.FullName + "</span><br />";
+                        //}
+                        //strList += "<span style='line-height:2'>";
+                        //strList += "<i style='width:15px' class='fa fa-phone'></i>| " + item.DeskphoneNo + "<br />";
+                        //strList += "<i style='width:15px' class='fa fa-tablet'></i>| " + item.PhoneNo + "<br />";
+                        //strList += "<i style='width:15px' class='fa fa-envelope'></i>| <a href='mailto:" + item.EmailAddress + "'>" + item.EmailAddress + "</a>";
+                        //strList += "</span>";
+                        //strList += "<div style='text-align:center; padding-top:12px'>";
+                        //strList += "<a href='skype:" + item.SkypeAccount + "?chat'><img src='../../Layout/Home/images/iconskype.png' alt='' style='width:60px; height:25px' /></a>";
+                        //strList += "</div></p></div></div></div>";
+                        $('#divTop2Consultant').html(strList);
+                    });
+                    $('#lblPhone').text(strPhone.substring(0, strPhone.length - 3));
+                }
+            })
+        }
+
+        function ShowPopup() {
+            $('#myModalPopup').appendTo("body").modal('show');
+        }
+
+        function HidePopup() {
+            $('#myModalPopup').modal('hide');
+            location.href = "https://www.google.com/flights/?f=0&gl";
+            location.target = "_blank";
+            return false;
+        }
+
+        function searchKeyPress(e) {
+            e = e || window.event;
+            if (e.keyCode == 13) {
+                document.getElementById('btnSearch_Ticket').click();
+                return false;
+            }
+            return true;
+        }
+
+        function Search()
+        {
+            window.location.href = '@Url.Action("TicketAndTour","Home")?key=' + document.getElementById('txtSearch_Ticket').value;
+            return false;
+        }
+    </script>
+}
+

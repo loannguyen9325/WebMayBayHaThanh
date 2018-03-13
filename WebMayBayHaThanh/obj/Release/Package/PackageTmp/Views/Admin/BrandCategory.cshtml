@@ -1,0 +1,303 @@
+﻿@{
+    ViewBag.Title = "Danh Mục Đối Tác";
+    Layout = "~/Views/Shared/_AdminPage.cshtml";
+}
+
+@section css {
+    <!-- Kendo -->
+    <link href="~/Kendo/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="~/Kendo/styles/kendo.material.min.css" rel="stylesheet">
+    <!-- End Kendo -->
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Cập Nhật Danh Mục Đối Tác</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <form method="post" class="form-horizontal form-label-left" novalidate>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="brandname">
+                            Tên đối tác / hãng bay <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtBrandName" class="form-control col-md-7 col-xs-12" name="brandname" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button id="btnSave" type="submit" class="btn btn-success" onclick="return Save();">Lưu</button>
+                            <button id="btnCancel" type="button" class="btn btn-primary" onclick="ClearInput()">Xoá</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Danh Sách Đối Tác</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <div id="grid_List_Brand"></div>
+            </div>
+        </div>
+        <div style="visibility:hidden">
+            <label id="lblBrandID"></label>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <!-- Kendo -->
+    <script src="~/Kendo/js/jszip.min.js" type="text/javascript"></script>
+    <script src="~/Kendo/js/kendo.all.min.js" type="text/javascript"></script>
+    <!-- End Kendo -->
+    <script>
+        $(document).ready(function () {
+            OnLoadGridBrand();
+            $('#lblBrandID').text('');
+        });
+
+        function Save() {
+            if ($.trim($('#txtBrandName').val()) != '')
+            {
+                if ($('#lblBrandID').text() == "") {
+                    SaveBrand();
+                    return false;
+                }
+                else {
+                    UpdateBrand();
+                    return false;
+                }
+            }
+        }
+
+        function OnLoadGridBrand() {
+            var dataSource = new kendo.data.DataSource({
+                pageSize: 10,
+                serverPaging: true,
+                serverSorting: true,
+                allowUnsort: true,
+                sort: {
+                    field: 'BrandName',
+                    dir: 'asc'
+                },
+                schema: {
+                    model: {
+                        id: "BrandID",
+                        fields: {
+                            BrandID: { type: "number", editable: false, nullable: true },
+                            BrandName: { type: "string", editable: false, nullable: true }
+                        }
+                    },
+                    data: 'records',
+                    total: 'total'
+                },
+                transport: {
+                    read: {
+                        contentType: "application/json; charset=utf-8",
+                        url: "/Admin/Select_Brand_List",
+                        type: 'POST',
+                        dataType: "json"
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation == "read") {
+                            return JSON.stringify(options);
+                        }
+                    }
+                },
+            });
+
+            $("#grid_List_Brand").kendoGrid({
+                dataSource: dataSource,
+                noRecords: true,
+                messages: {
+                    noRecords: "Không có kết quả nào được tìm thấy!"
+                },
+                sortable: true,
+                scrollable: true,
+                pageable: {
+                    buttonCount: 3,
+                    input: true,
+                    messages: {
+                        display: 'Dòng {0} - {1} / {2} dòng',
+                        empty: 'Không có dữ liệu',
+                        first: 'Trang đầu',
+                        itemsPerPage: 'dòng / trang',
+                        last: 'Trang cuối',
+                        next: 'Trang sau',
+                        of: '/ {0} trang',
+                        page: 'Trang',
+                        previous: 'Trang trước'
+                    },
+                    pageSize: 10,
+                    pageSizes: [10, 20, 50]
+                },
+                selectable: "row",
+                columns: [
+                //{
+                //    field: "BrandID",
+                //    title: "STT",
+                //    width: 50,
+                //    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                //    headerAttributes: {
+                //        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                //    }
+                //},
+                {
+                    field: "BrandName",
+                    title: "Tên đối tác",
+                    width: 200,
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    width: 150,
+                    template: '<a onclick="ShowUpdate(#= BrandID #);" class="btn btn-xs btn-info"><i class="ace-icon fa fa-edit bigger-40"></i> SỬA</a>',
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                }]
+            }).data("kendoGrid");
+        }
+
+        function Select_List_Brand() {
+            document.getElementById("tblBrandList").innerHTML = "";
+            $.getJSON("/Admin/Select_Brand_List",
+            function (data) {
+                if (data.length > 0) {
+                    var table = $('<table class=\'table-bordered table-condensed table-hover table-striped col-md-5 col-sm-5 col-xs-12\'>');
+                    var tblHeader = "<tr><th style='text-align:center' class='col-md-1 col-sm-1 col-xs-1'>STT</th><th class='col-md-3 col-sm-3 col-xs-3'>Tên đối tác</th><th class='col-md-1 col-sm-1 col-xs-1'></th></tr>";
+                    $(tblHeader).appendTo(table);
+                    $.each(data, function (key, item) {
+                        tr = $('<tr/>');
+                        tr.append("<td style='text-align:center'>" + item.BrandID + "</td>");
+                        tr.append("<td>" + item.BrandName + "</td>");
+                        tr.append("<td style='text-align:center; vertical-align:middle'><a onclick='ShowUpdate(" + item.BrandID + ");' class='btn btn-xs btn-info'><i class='ace-icon fa fa-edit bigger-40'></i>&nbsp;&nbsp;Sửa</a></td>");
+                        $(table).append(tr);
+                    });
+                }
+                else {
+                    var table = $('<table class=\'table table-bordered table-condensed table-hover table-striped\'>');
+                    var tblHeader = "<tr><th style='text-align:center' class='col-md-1 col-sm-1 col-xs-1'>STT</th><th class='col-md-3 col-sm-3 col-xs-3'>Tên đối tác</th><th class='col-md-1 col-sm-1 col-xs-1'></th></tr>";
+                    $(tblHeader).appendTo(table);
+                    var tblBody = "<tr><td colspan='3' style='text-align:center' class='col-md-12'>Không có kết quả nào được tìm thấy</td></tr>";
+                    $(tblBody).appendTo(table);
+                }
+                $('table').append(table);
+                $('#tblBrandList').DataTable();
+            });
+        };
+
+        function SaveBrand() {
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            fd.append("BrandName", $('#txtBrandName').val());
+            fd.append("LOAI", "INSERT");
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CapNhatDoiTac',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        $('#grid_List_Brand').data('kendoGrid').dataSource.read();
+                        ClearInput();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+        }
+
+        function ShowUpdate(BrandID) {
+            //$.getJSON("/QuanTri/Select_List_Brand_By_Key", { BrandID: BrandID },
+            //function (data) {
+            //    if (data.length > 0) 
+            //    {
+            //        $.each(data, function (key, item) 
+            //        {
+            //            $('#lblBrandID').text(item.BrandID);
+            //            document.getElementById("txtBrandName").value = item.BrandName;
+            //        });
+            //    }
+            //})
+            var grid_data = $("#grid_List_Brand").data("kendoGrid"),
+            data = grid_data.dataSource.data();
+
+            var res = $.grep(data, function (d) {
+                return d.BrandID == BrandID;
+            });
+
+            $('#lblBrandID').text(BrandID);
+            $('#txtBrandName').val(res[0].BrandName);
+        };
+
+        function UpdateBrand() {
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            fd.append("BrandID", $('#lblBrandID').text());
+            fd.append("BrandName", $('#txtBrandName').val());
+            fd.append("LOAI", "UPDATE");
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CapNhatDoiTac',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        $('#grid_List_Brand').data('kendoGrid').dataSource.read();
+                        $('#lblBrandID').text('');
+                        ClearInput();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+        }
+
+        function ClearInput() {
+            document.getElementById("txtBrandName").value = "";
+            $('#lblBrandID').text('');
+        };
+    </script>
+}

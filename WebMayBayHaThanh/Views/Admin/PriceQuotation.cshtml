@@ -1,0 +1,342 @@
+﻿@{
+    ViewBag.Title = "Đăng Ký Nhận Báo Giá";
+    Layout = "~/Views/Shared/_AdminPage.cshtml";
+}
+
+@section css {
+    <!-- Kendo -->
+    <link href="~/Kendo/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="~/Kendo/styles/kendo.material.min.css" rel="stylesheet">
+    <!-- End Kendo -->
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+                <div class="x_title">
+                    <h3><font color="#1ABB9C">Tìm Kiếm</font></h3>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content bg-white">
+                    <form method="post" class="form-horizontal form-label-left" novalidate>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="keysearch">
+                                Từ khoá
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="txtKeySearch" name="keysearch" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button id="btnSearch" type="button" class="btn btn-success" onclick="Search()">Tìm</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Danh Sách Đăng Ký Nhận Báo Giá</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <div id="grid_List_PriceQuotation"></div>
+            </div>
+        </div>
+        <div style="visibility:hidden">
+            <label id="lblCustomer_PriceQuotation_ID"></label>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalSua">
+    <div class="modal-dialog" style="width:50%;">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#fff; background-color:#37619C;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">THÔNG TIN ĐĂNG KÝ NHẬN BÁO GIÁ</h4>
+            </div>
+            <div class="modal-body" style="overflow:auto;">
+                <div class="widget-main">
+                    <div class="item form-group" style="clear:both;">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-top:5px">
+                            Họ và tên
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input id="txtCustomer_PriceQuotation_Name" class="form-control col-md-9 col-xs-12" readonly="readonly" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group" style="clear:both;"></div>
+                    <div class="item form-group" style="clear:both;">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-top:5px">
+                            Số điện thoại
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input id="txtCustomer_PriceQuotation_Phone" class="form-control col-md-9 col-xs-12" readonly="readonly" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group" style="clear:both;"></div>
+                    <div class="item form-group" style="clear:both;">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-top:5px">
+                            Địa chỉ email
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input id="txtCustomer_PriceQuotation_Email" class="form-control col-md-9 col-xs-12" readonly="readonly" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group" style="clear:both;"></div>
+                    <div class="item form-group" style="clear:both;">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-top:5px">
+                            Hành trình quan tâm
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input id="txtCustomer_PriceQuotation_Content" class="form-control col-md-9 col-xs-12" readonly="readonly" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group" style="clear:both;"></div>
+                    <div class="item form-group" style="clear:both;">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-top:5px">
+                            Ngày khởi hành
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input id="txtCustomer_PriceQuotation_DateFlight" class="form-control col-md-9 col-xs-12" readonly="readonly" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group" style="clear:both;"></div>
+                    <div class="item form-group" style="clear:both;">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-top:5px">
+                            Thời gian đăng ký
+                        </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input id="txtCreatedDate" class="form-control col-md-9 col-xs-12" readonly="readonly" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="ace-icon fa fa-close bigger-70"></i> Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalXoa">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#fff; background-color:#37619C;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xoá Thông Tin Đăng Ký Nhận Báo Giá</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="Customer_PriceQuotation_ID_Del" />
+                <span id="alertxoa">Bạn có chắc muốn xoá thông tin đăng ký này?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-info" onclick="DeletePriceQuotation()"><i class="ace-icon fa fa-trash bigger-40"></i> Xóa</button>
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="ace-icon fa fa-close bigger-70"></i> Huỷ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <!-- Kendo -->
+    <script src="~/Kendo/js/jszip.min.js" type="text/javascript"></script>
+    <script src="~/Kendo/js/kendo.all.min.js" type="text/javascript"></script>
+    <!-- End Kendo -->
+    <script>
+        $(document).ready(function () {
+            Select_List_PriceQuotation();
+        });
+
+        function OnLoadGridPriceQuotation(Keysearch) {
+            var dataSource = new kendo.data.DataSource({
+                pageSize: 10,
+                serverPaging: true,
+                serverSorting: true,
+                allowUnsort: true,
+                sort: {
+                    field: 'Customer_PriceQuotation_ID',
+                    dir: 'asc'
+                },
+                schema: {
+                    model: {
+                        id: "Customer_PriceQuotation_ID",
+                        fields: {
+                            Customer_PriceQuotation_ID: { type: "number", editable: false, nullable: true },
+                            Customer_PriceQuotation_Name: { type: "string", editable: false, nullable: true },
+                            Customer_PriceQuotation_Phone: { type: "string", editable: false, nullable: true },
+                            Customer_PriceQuotation_Email: { type: "string", editable: false, nullable: true },
+                            Customer_PriceQuotation_Content: { type: "string", editable: false, nullable: true },
+                            Customer_PriceQuotation_DateFlight: { type: "string", editable: false, nullable: true },
+                            CreatedDate: { type: "string", editable: false, nullable: true },
+                        }
+                    },
+                    data: 'records',
+                    total: 'total'
+                },
+                transport: {
+                    read: {
+                        contentType: "application/json; charset=utf-8",
+                        url: "/Admin/Select_List_PriceQuotation",
+                        type: 'POST',
+                        dataType: "json"
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation == "read") {
+                            try {
+                                options.Keysearch = Keysearch;
+                            }
+                            catch (ex) {
+                                toastFail('{CreateDataSourceQL.parameterMap}' + ex.message);
+                            }
+                            return JSON.stringify(options);
+                        }
+                    }
+                }
+            });
+
+            $("#grid_List_PriceQuotation").kendoGrid({
+                dataSource: dataSource,
+                noRecords: true,
+                messages: {
+                    noRecords: "Không có kết quả nào được tìm thấy!"
+                },
+                sortable: true,
+                scrollable: true,
+                pageable: {
+                    buttonCount: 3,
+                    input: true,
+                    messages: {
+                        display: 'Dòng {0} - {1} / {2} dòng',
+                        empty: 'Không có dữ liệu',
+                        first: 'Trang đầu',
+                        itemsPerPage: 'dòng / trang',
+                        last: 'Trang cuối',
+                        next: 'Trang sau',
+                        of: '/ {0} trang',
+                        page: 'Trang',
+                        previous: 'Trang trước'
+                    },
+                    pageSize: 10,
+                    pageSizes: [10, 20, 50]
+                },
+                selectable: "row",
+                columns: [
+                {
+                    field: "Customer_PriceQuotation_Name",
+                    title: "Họ và tên",
+                    width: 200,
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    field: "Customer_PriceQuotation_Phone",
+                    title: "Số Điện Thoại",
+                    width: 130,
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    field: "Customer_PriceQuotation_Content",
+                    title: "Lịch Trình",
+                    width: 350,
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    field: "Customer_PriceQuotation_DateFlight",
+                    title: "Ngày Khởi Hành",
+                    width: 140,
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    width: 150,
+                    template: '<a onclick="ShowUpdate(#= Customer_PriceQuotation_ID #);" class="btn btn-xs btn-info"><i class="ace-icon fa fa-eye bigger-40"></i> XEM</a>&nbsp;&nbsp;<a onclick="ShowDelete(#= Customer_PriceQuotation_ID #);" class="btn btn-xs btn-danger"><i class="ace-icon fa fa-trash bigger-40"></i> Xóa</a>',
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                }]
+            }).data("kendoGrid");
+        }
+
+        function Select_List_PriceQuotation() {
+            OnLoadGridPriceQuotation($('#txtKeySearch').val());
+        }
+
+        function Search() {
+            Select_List_PriceQuotation();
+        }
+
+        function ShowUpdate(Customer_PriceQuotation_ID) {
+            var grid_data = $("#grid_List_PriceQuotation").data("kendoGrid"),
+            data = grid_data.dataSource.data();
+
+            var res = $.grep(data, function (d) {
+                return d.Customer_PriceQuotation_ID == Customer_PriceQuotation_ID;
+            });
+
+            $('#lblCustomer_PriceQuotation_ID').text(Customer_PriceQuotation_ID);
+            $('#txtCustomer_PriceQuotation_Name').val(res[0].Customer_PriceQuotation_Name);
+            $('#txtCustomer_PriceQuotation_Phone').val(res[0].Customer_PriceQuotation_Phone);
+            $('#txtCustomer_PriceQuotation_Email').val(res[0].Customer_PriceQuotation_Email);
+            $('#txtCustomer_PriceQuotation_Content').val(res[0].Customer_PriceQuotation_Content);
+            $('#txtCustomer_PriceQuotation_DateFlight').val(res[0].Customer_PriceQuotation_DateFlight);
+            $('#txtCreatedDate').val(res[0].CreatedDate);
+
+            $('#myModalSua').appendTo("body").modal('show');
+        };
+
+        function ShowDelete(Customer_PriceQuotation_ID) {
+            $('#Customer_PriceQuotation_ID_Del').val(Customer_PriceQuotation_ID);
+
+            $('#myModalXoa').appendTo("body").modal('show');
+        }
+
+        function DeletePriceQuotation() {
+            $('#myModalXoa').modal('hide');
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            fd.append("Customer_PriceQuotation_ID", $('#Customer_PriceQuotation_ID_Del').val());
+            fd.append("LOAI", "DELETE");
+
+            $.ajax({
+                type: 'POST',
+                url: '/Home/CapNhatDangKyNhanBaoGia',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        $('#grid_List_PriceQuotation').data('kendoGrid').dataSource.read();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+        };
+    </script>
+}

@@ -1,0 +1,13 @@
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\MayBayHaThanh.DAL.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\MayBayHaThanh.DAL.pdb
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.DAL\obj\Release\MayBayHaThanh.DAL.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.DAL\obj\Release\MayBayHaThanh.DAL.pdb
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\buimi\Downloads\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\MayBayHaThanh.DAL.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\MayBayHaThanh.DAL.pdb
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.DAL\bin\Release\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.DAL\obj\Release\MayBayHaThanh.DAL.csprojResolveAssemblyReference.cache
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.DAL\obj\Release\MayBayHaThanh.DAL.dll
+C:\Users\1064486\OneDrive - Jabil\Projects\Freelance\WebMayBayHaThanh\MayBayHaThanh.DAL\obj\Release\MayBayHaThanh.DAL.pdb

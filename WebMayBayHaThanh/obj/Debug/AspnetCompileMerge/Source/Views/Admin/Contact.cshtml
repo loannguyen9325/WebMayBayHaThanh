@@ -1,0 +1,263 @@
+﻿@{
+    ViewBag.Title = "Cập Nhật Thông Tin Liên Hệ";
+    Layout = "~/Views/Shared/_AdminPage.cshtml";
+}
+
+@section css {
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Cập Nhật Thông Tin Liên Hệ</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <form method="post" class="form-horizontal form-label-left" novalidate>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="companyname">
+                            Tên công ty <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtCompanyName" class="form-control col-md-7 col-xs-12" name="companyname" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="companyaddress">
+                            Địa chỉ công ty <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtCompanyAddress" class="form-control col-md-7 col-xs-12" name="companyaddress" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="companyemail">
+                            Địa chỉ email <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtCompanyEmail" class="form-control col-md-7 col-xs-12" name="companyemail" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hotline">
+                            Hotline <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtHotline" class="form-control col-md-7 col-xs-12" name="hotline" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="companyphone">
+                            Điện thoại bàn <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtCompanyPhone" class="form-control col-md-7 col-xs-12" name="companyphone" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="companyfax">
+                            Số fax <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtCompanyFax" class="form-control col-md-7 col-xs-12" name="companyfax" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Logo công ty <span class="required">*</span>
+                        </label>
+                        <div class="col-md-3 col-sm-5 col-xs-12" style="padding-top:6px">
+                            <input type='file' id="imgImageUpload" accept="image/x-png,image/gif,image/jpeg" />
+                            <div style="padding-top:5px"><img id="divPreview" src="#" width="100%" height="170" alt="Hình ảnh được upload" style="display:none" /></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button id="btnSave" type="submit" class="btn btn-success" onclick="return Save();">Lưu</button>
+                            <button id="btnCancel" type="button" class="btn btn-primary" onclick="ClearInput()">Xoá</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Thông Tin Hiện Hành</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <table id="tblCompanyInfo" class="table table-hover"></table>
+            </div>
+        </div>
+        <div style="visibility:hidden">
+            <label id="lblLogo"></label>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#divPreview').attr('src', e.target.result);
+                    $('#divPreview').attr('style', 'display:block');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgImageUpload").change(function () {
+            var val = $(this).val();
+            switch (val.substring(val.lastIndexOf('.') + 1).toLowerCase()) {
+                case 'gif': case 'jpg': case 'png':
+                    readURL(this);
+                    break;
+                default:
+                    $(this).val('');
+                    ShowAlert('Thông báo', 'Tệp vừa được chọn không hợp lệ.\r\nVui lòng chọn đúng định dạng hình ảnh.', 'error');
+                    break;
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            document.getElementById("btnSave").disabled = true;
+            $('#lblLogo').text('');
+            Select_List_GeneralInfo();
+        });
+
+        function Select_List_GeneralInfo() {
+            document.getElementById("tblCompanyInfo").innerHTML = "";
+            $.getJSON("/Admin/Select_List_GeneralInfo",
+            function (data) {
+                var table = $('<table class=\'table-bordered table-condensed table-hover table-striped col-md-12 col-sm-12 col-xs-12\'>');
+                var tblHeader = "<tr><td colspan='2' col-md-12 col-sm-12 col-xs-12 style='padding-left:10px'><a onclick='ShowUpdate();' class='btn btn-xs btn-info'><i class='ace-icon fa fa-edit bigger-40'></i>&nbsp;&nbsp;Sửa</a></td></tr>";
+                $(tblHeader).appendTo(table);
+                $.each(data, function (key, item) {
+                    tr = $('<tr/>');
+                    tr.append("<th col-md-2 col-sm-2 col-xs-2 style='padding-left:10px'>Tên công ty</th><td col-md-10 col-sm-10 col-xs-10 style='padding-left:10px'>" + item.CompanyName + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<th col-md-2 col-sm-2 col-xs-2 style='padding-left:10px'>Địa chỉ</th><td col-md-10 col-sm-10 col-xs-10 style='padding-left:10px'>" + item.CompanyAddress + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<th col-md-2 col-sm-2 col-xs-2 style='padding-left:10px'>Email</th><td col-md-10 col-sm-10 col-xs-10 style='padding-left:10px'>" + item.CompanyMail + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<th col-md-2 col-sm-2 col-xs-2 style='padding-left:10px'>Hotline</th><td col-md-10 col-sm-10 col-xs-10 style='padding-left:10px'>" + item.Hotline + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<th col-md-2 col-sm-2 col-xs-2 style='padding-left:10px'>Số điện thoại</th><td col-md-10 col-sm-10 col-xs-10 style='padding-left:10px'>" + item.CompanyPhone + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<th col-md-2 col-sm-2 col-xs-2 style='padding-left:10px'>Số fax</th><td col-md-10 col-sm-10 col-xs-10 style='padding-left:10px'>" + item.CompanyFax + "</td>");
+                    $(table).append(tr);
+                    tr = $('<tr/>');
+                    tr.append("<th col-md-2 col-sm-2 col-xs-2 style='padding-left:10px'>Logo</th><td col-md-10 col-sm-10 col-xs-10 style='padding-left:10px'><img src='../../" + item.Logo + "' width='70px' height='55px'/></td>");
+                    $(table).append(tr);
+                });
+                $('table').append(table);
+                //$('#tblCompanyInfo').DataTable();
+            });
+        };
+
+        function ShowUpdate() {
+            $.getJSON("/Admin/Select_List_GeneralInfo",
+            function (data) {
+                if (data.length > 0) {
+                    $.each(data, function (key, item) {
+                        $('#lblLogo').text(item.Logo);
+                        document.getElementById("txtCompanyName").value = item.CompanyName;
+                        document.getElementById("txtCompanyAddress").value = item.CompanyAddress;
+                        document.getElementById("txtCompanyEmail").value = item.CompanyMail;
+                        document.getElementById("txtHotline").value = item.Hotline;
+                        document.getElementById("txtCompanyPhone").value = item.CompanyPhone;
+                        document.getElementById("txtCompanyFax").value = item.CompanyFax;
+                        var path = "../../" + item.Logo;
+                        $('#divPreview').attr('src', path);
+                        $('#divPreview').attr('style', 'display:block');
+                        document.getElementById("btnSave").disabled = false;
+                    });
+                }
+            })
+        };
+
+        function Save() {
+            if ($.trim($('#txtCompanyName').val()) != '' && $.trim($('#txtCompanyAddress').val()) != '' &&
+                $.trim($('#txtCompanyEmail').val()) != '' && $.trim($('#txtHotline').val()) != '' &&
+                $.trim($('#txtCompanyPhone').val()) != '' && $.trim($('#txtCompanyFax').val()) != '')
+            {
+                SaveInfo();
+                return false;
+            }
+        }
+
+        function SaveInfo()
+        {
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            var files = $('#imgImageUpload').get(0).files;
+            if (files.length > 0) {
+                fd.append("ImageFile", files[0]);
+            }
+            else {
+                fd.append("Logo", document.getElementById('lblLogo').innerHTML);
+            }
+            fd.append("CompanyName", $('#txtCompanyName').val());
+            fd.append("CompanyAddress", $('#txtCompanyAddress').val());
+            fd.append("CompanyMail", $('#txtCompanyEmail').val());
+            fd.append("Hotline", $('#txtHotline').val());
+            fd.append("CompanyPhone", $('#txtCompanyPhone').val());
+            fd.append("CompanyFax", $('#txtCompanyFax').val());
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CapNhatThongTinLienHe',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        Select_List_GeneralInfo();
+                        $('#lblLogo').text('');
+                        ClearInput();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+        }
+
+        function ClearInput() {
+            document.getElementById("txtCompanyName").value = "";
+            document.getElementById("txtCompanyAddress").value = "";
+            document.getElementById("txtCompanyEmail").value = "";
+            document.getElementById("txtHotline").value = "";
+            document.getElementById("txtCompanyPhone").value = "";
+            document.getElementById("txtCompanyFax").value = "";
+            document.getElementById("imgImageUpload").value = "";
+            $('#divPreview').attr('style', 'display:none');
+            $('#lblLogo').text('');
+            document.getElementById("btnSave").disabled = true;
+        };
+    </script>
+}

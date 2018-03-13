@@ -1,0 +1,848 @@
+﻿@{
+    ViewBag.Title = "Cập Nhật Vé - Tour Du Lịch";
+    Layout = "~/Views/Shared/_AdminPage.cshtml";
+}
+
+@section css {
+    <link href="~/Layout/Admin/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    
+    <!-- Kendo -->
+    <link href="~/Kendo/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="~/Kendo/styles/kendo.material.min.css" rel="stylesheet">
+    <!-- End Kendo -->
+
+    <link rel="stylesheet" href="~/Layout/Admin/css/bootstrap-datepicker3.min.css" />
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Cập Nhật Bài Viết Vé - Tour Mới</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <form method="post" class="form-horizontal form-label-left" novalidate>
+                    <div class="item form-group" style="padding-bottom:15px">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Loại <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top:6px">
+                            <div id="type" class="btn-group" data-toggle="buttons">
+                                <input type="radio" class="flat" name="type" id="rdbTicket" value="1" checked="" required /> Vé &nbsp;
+                                <input type="radio" class="flat" name="type" id="rdbTour" value="2" /> Tour
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="productcategory">
+                            Danh mục <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="cmbProductCategory" name="cmbProductCategory" class="form-control" required="required" onchange="ProductCategory_SelectedIndexChanged()"></select>
+                        </div>
+                    </div>
+                    <div id="divDomesticForeign" class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Nhóm <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top:6px">
+                            <div id="group" class="btn-group" data-toggle="buttons">
+                                <input type="radio" class="flat" name="group" id="rdbDomestic" value="1" checked="" onchange="IsDomesticOrForeign()" required /> Trong Nước &nbsp;
+                                <input type="radio" class="flat" name="group" id="rdbForeign" value="2" onchange="IsDomesticOrForeign()" /> Quốc Tế
+                            </div>
+                        </div>
+                        <div style="height:15px; width:100%; clear:both"></div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="placefrom">
+                            Địa điểm đi <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="cmbPlaceFrom" name="cmbPlaceFrom" class="form-control" required="required"></select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="placeto">
+                            Địa điểm đến <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="cmbPlaceTo" name="cmbPlaceTo" class="form-control" required="required"></select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="productname">
+                            Tên bài viết <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtProductName" class="form-control col-md-7 col-xs-12" name="productname" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="brand">
+                            Hãng bay <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="cmbBrand" name="cmbBrand" class="form-control" required="required"></select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="date">
+                            Ngày áp dụng
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <div class="input-group">
+                                <input class="form-control date-picker" placeholder="" id="daProductEffectedDate" type="text" style="text-align:right;"/>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="productprice">
+                            Giá tiền 
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <input type="text" id="txtProductPrice" name="productprice" class="form-control col-md-7 col-xs-12" data-mask="#.##0" data-mask-reverse="true">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="status">
+                            Trạng thái
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="cmbProductStatus" name="cmbProductStatus" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Hình ảnh chủ đề <span class="required">*</span>
+                        </label>
+                        <div class="col-md-3 col-sm-5 col-xs-12" style="padding-top:5px">
+                            <input type='file' id="imgImageUpload" name="imgImageUpload" accept="image/x-png,image/gif,image/jpeg" />
+                            <div style="padding-top:5px"><img id="divPreview" src="#" width="100%" height="170" alt="Hình ảnh được upload" style="display:none" /></div>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <textarea id="txtEditor"></textarea> 
+                        </div>
+                    </div>
+                    <div id="divLastUpdatedDate" class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Cập nhật lần cuối
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top:8px">
+                            <label id="lblLastUpdatedDate"></label>
+                        </div>
+                    </div>
+                    <div id="divLastUpdatedBy" class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Người cập nhật
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding-top:8px">
+                            <label id="lblLastUpdatedBy"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button id="btnSave" type="submit" class="btn btn-success" onclick="return Save();">Lưu</button>
+                            <button id="btnCancel" type="button" class="btn btn-primary" onclick="ClearInput()">Xoá</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Tìm Kiếm</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <form method="post" class="form-horizontal form-label-left" novalidate>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                            Loại
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div id="type_search" class="btn-group" data-toggle="buttons">
+                                <input type="radio" class="flat" name="type_search" id="rdbTicket_Search" value="1" checked="checked" required /> Vé &nbsp;
+                                <input type="radio" class="flat" name="type_search" id="rdbTour_Search" value="2" /> Tour
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="keysearch">
+                            Từ khoá
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="txtKeySearch" name="keysearch" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button id="btnSearch" type="button" class="btn btn-success" onclick="Search()">Tìm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="x_panel">
+            <div class="x_title">
+                <h3><font color="#1ABB9C">Danh Sách Bài Viết</font></h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content bg-white">
+                <div id="grid_List_Product"></div>   
+            </div>
+        </div>
+        <div style="visibility:hidden">
+            <label id="lblProductID"></label>
+            <label id="lblProductImage"></label>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalXoa">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#fff; background-color:#37619C;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xoá Bài Viết Vé - Tour Du Lịch</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ProductID_Del" />
+                <span id="alertxoa">Bạn có chắc muốn xoá bài viết này?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-info" onclick="DeleteProduct()"><i class="ace-icon fa fa-trash bigger-40"></i> Xóa</button>
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="ace-icon fa fa-close bigger-70"></i> Huỷ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Layout/Admin/scripts/bootstrap-datepicker.min.js"></script>
+
+    <!-- Kendo -->
+    <script src="~/Kendo/js/jszip.min.js" type="text/javascript"></script>
+    <script src="~/Kendo/js/kendo.all.min.js" type="text/javascript"></script>
+    <!-- End Kendo -->
+
+    <script src="~/Layout/Admin/css/editor.js"></script>
+    <script src="~/Scripts/jquery.mask.min.js"></script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#divPreview').attr('src', e.target.result);
+                    $('#divPreview').attr('style', 'display:block');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgImageUpload").change(function () {
+            var val = $(this).val();
+            switch (val.substring(val.lastIndexOf('.') + 1).toLowerCase()) {
+                case 'gif': case 'jpg': case 'png':
+                    readURL(this);
+                    break;
+                default:
+                    $(this).val('');
+                    ShowAlert('Thông báo', 'Tệp vừa được chọn không hợp lệ.\r\nVui lòng chọn đúng định dạng hình ảnh.', 'error');
+                    break;
+            }
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $('#divDomesticForeign').attr('style', 'display:none');
+            $('#divLastUpdatedDate').attr('style', 'display:none');
+            $('#divLastUpdatedBy').attr('style', 'display:none');
+            $("#txtEditor").Editor();
+            $('#txtProductPrice').mask("#.##0", { reverse: true });
+            $('#txtProductPrice').attr('style', 'text-align:right');
+            $('.date-picker').datepicker({
+                format: "dd/mm/yyyy",
+                autoclose: true,
+                todayHighlight: true
+            })
+            Select_List_ProductCategory();
+            Select_List_Brand();
+            Select_List_ProductStatus();
+            Select_List_Product();
+        });
+
+        function Select_List_ProductCategory() {
+            $.getJSON("/Admin/Select_List_ProductCategory")
+            .done(function (data) {
+                $('#cmbProductCategory').empty();
+                $('#cmbProductCategory_Search').empty();
+                $("<option value=''>--- Danh mục sản phẩm ---</option>").appendTo($('#cmbProductCategory'));
+                $("<option value='0'>--- Tất cả ---</option>").appendTo($('#cmbProductCategory_Search'));
+                $.each(data, function (key, item) {
+                    $("<option value=" + item.ProductCategoryID + ">" + item.ProductCategoryName + " </option>").appendTo($('#cmbProductCategory'));
+                    $("<option value=" + item.ProductCategoryID + ">" + item.ProductCategoryName + " </option>").appendTo($('#cmbProductCategory_Search'));
+                });
+            });
+        }
+
+        function Select_List_PlaceFrom(setValue) {
+            $.getJSON("/Admin/Select_List_CountryOrPlace", { IsForeign: false })
+            .done(function (data) {
+                if (data.length > 0) {
+                    $('#cmbPlaceFrom').empty();
+                    $("<option value=''>--- Địa điểm đi ---</option>").appendTo($('#cmbPlaceFrom'));
+                    $.each(data, function (key, item) {
+                        $("<option value=" + item.CountryID + ">" + item.CountryName + " </option>").appendTo($('#cmbPlaceFrom'));
+                    });
+                    if (setValue != null || setValue.length > 0) {
+                        $('select[name=cmbPlaceFrom]').val(setValue);
+                    }
+                }
+            })
+        }
+
+        function Select_List_PlaceTo(IsForeign, setValue) {
+            $.getJSON("/Admin/Select_List_CountryOrPlace", { IsForeign: IsForeign })
+            .done(function (data) {
+                if (data.length > 0) {
+                    $('#cmbPlaceTo').empty();
+                    $("<option value=''>--- Địa điểm đến ---</option>").appendTo($('#cmbPlaceTo'));
+                    $.each(data, function (key, item) {
+                        $("<option value=" + item.CountryID + ">" + item.CountryName + " </option>").appendTo($('#cmbPlaceTo'));
+                    });
+                    if (setValue != null || setValue.length > 0) {
+                        $('select[name=cmbPlaceTo]').val(setValue);
+                    }
+                }
+            })
+        }
+
+        function ProductCategory_SelectedIndexChanged() {
+            $('#loading').fadeIn();
+            var ProductCategoryID = $('#cmbProductCategory').val();
+            if (ProductCategoryID == 1) {
+                Select_List_PlaceFrom();
+                Select_List_PlaceTo(true);
+                $('#divDomesticForeign').attr('style', 'display:none');
+            }
+            else if (ProductCategoryID == 2) {
+                Select_List_PlaceFrom();
+                Select_List_PlaceTo(false);
+                $('#divDomesticForeign').attr('style', 'display:none');
+            }
+            else if (ProductCategoryID == 3) {
+                $('#divDomesticForeign').attr('style', 'display:block');
+                Select_List_PlaceFrom();
+                Select_List_PlaceTo(false);
+            }
+            else
+            {
+                $('#cmbPlaceFrom').empty();
+                $('#cmbPlaceTo').empty();
+                $('#divDomesticForeign').attr('style', 'display:none');
+            }
+            $('#loading').fadeOut();
+        }
+
+        function IsDomesticOrForeign() {
+            $('#loading').fadeIn();
+            if (document.getElementById('rdbDomestic').checked) {
+                Select_List_PlaceFrom();
+                Select_List_PlaceTo(false);
+            }
+            else {
+                Select_List_PlaceFrom();
+                Select_List_PlaceTo(true);
+            }
+            $('#loading').fadeOut();
+        }
+
+        function Select_List_Brand() {
+            $.getJSON("/Admin/Select_List_Brand")
+            .done(function (data) {
+                $('#cmbBrand').empty();
+                $("<option value=''>--- Hãng bay ---</option>").appendTo($('#cmbBrand'));
+                $.each(data, function (key, item) {
+                    $("<option value=" + item.BrandID + ">" + item.BrandName + " </option>").appendTo($('#cmbBrand'));
+                });
+            });
+        }
+
+        function Select_List_ProductStatus() {
+            $.getJSON("/Admin/Select_List_ProductStatus")
+            .done(function (data) {
+                $('#cmbProductStatus').empty();
+                $("<option value='0'>--- Trạng thái ---</option>").appendTo($('#cmbProductStatus'));
+                $.each(data, function (key, item) {
+                    $("<option value=" + item.ProductStatusID + ">" + item.ProductStatusName + " </option>").appendTo($('#cmbProductStatus'));
+                });
+            });
+        }
+
+        function Select_List_Product() {
+            if (document.getElementById("rdbTicket_Search").checked) {
+                OnLoadGridProduct(1, $('#txtKeySearch').val());
+            }
+            else {
+                OnLoadGridProduct(2, $('#txtKeySearch').val());
+            }
+        }
+
+        function Search() {
+            Select_List_Product();
+        }
+
+        function OnLoadGridProduct(ProductTypeID, Keysearch) {
+            var dataSource = new kendo.data.DataSource({
+                pageSize: 10,
+                serverPaging: true,
+                serverSorting: true,
+                allowUnsort: true,
+                sort: {
+                    field: 'ProductID',
+                    dir: 'asc'
+                },
+                schema: {
+                    model: {
+                        id: "ProductID",
+                        fields: {
+                            ProductID: { type: "number", editable: false, nullable: true },
+                            ProductTypeID: { type: "number", editable: false, nullable: true },
+                            ProductCategoryID: { type: "number", editable: false, nullable: true },
+                            ProductGroupID: { type: "number", editable: false, nullable: true },
+                            ProductCategoryName: { type: "string", editable: false, nullable: true },
+                            ProductName: { type: "string", editable: false, nullable: true },
+                            LeavingFrom: { type: "number", editable: false, nullable: true },
+                            LeavingFromName: { type: "string", editable: false, nullable: true },
+                            GoingTo: { type: "number", editable: false, nullable: true },
+                            GoingToName: { type: "string", editable: false, nullable: true },
+                            BrandID: { type: "number", editable: false, nullable: true },
+                            BrandName: { type: "string", editable: false, nullable: true },
+                            ProductEffectedDate: { type: "string", editable: false, nullable: true },
+                            ProductPrice: { type: "number", editable: false, nullable: true },
+                            ProductContent: { type: "string", editable: false, nullable: true },
+                            ProductImage: { type: "string", editable: false, nullable: true },
+                            ProductStatus: { type: "number", editable: false, nullable: true },
+                            CreatedBy: { type: "string", editable: false, nullable: true },
+                            CreatedDate: { type: "string", editable: false, nullable: true },
+                            LastUpdatedBy: { type: "string", editable: false, nullable: true },
+                            LastUpdatedDate: { type: "string", editable: false, nullable: true },
+                        }
+                    },
+                    data: 'records',
+                    total: 'total'
+                },
+                transport: {
+                    read: {
+                        contentType: "application/json; charset=utf-8",
+                        url: "/Admin/Select_List_Product",
+                        type: 'POST',
+                        dataType: "json"
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation == "read") {
+                            try {
+                                options.ProductTypeID = ProductTypeID;
+                                options.Keysearch = Keysearch
+                            }
+                            catch (ex) {
+                                toastFail('{CreateDataSourceQL.parameterMap}' + ex.message);
+                            }
+                            return JSON.stringify(options);
+                        }
+                    }
+                }
+            });
+
+            $("#grid_List_Product").kendoGrid({
+                dataSource: dataSource,
+                noRecords: true,
+                messages: {
+                    noRecords: "Không có kết quả nào được tìm thấy!"
+                },
+                sortable: true,
+                scrollable: true,
+                pageable: {
+                    buttonCount: 3,
+                    input: true,
+                    messages: {
+                        display: 'Dòng {0} - {1} / {2} dòng',
+                        empty: 'Không có dữ liệu',
+                        first: 'Trang đầu',
+                        itemsPerPage: 'dòng / trang',
+                        last: 'Trang cuối',
+                        next: 'Trang sau',
+                        of: '/ {0} trang',
+                        page: 'Trang',
+                        previous: 'Trang trước'
+                    },
+                    pageSize: 10,
+                    pageSizes: [10, 20, 50]
+                },
+                selectable: "row",
+                columns: [
+                //{
+                //    field: "ProductID",
+                //    title: "STT",
+                //    width: 50,
+                //    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                //    headerAttributes: {
+                //        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                //    }
+                //},
+                {
+                    title: "Loại",
+                    width: 50,
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    template: "# if (ProductTypeID == 1) { #" + "Vé" + "# } else { #" + "Tour" + "# } #",
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    field: "LeavingFromName",
+                    title: "Địa điểm đi",
+                    width: 200,
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    field: "GoingToName",
+                    title: "Địa điểm đến",
+                    width: 200,
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    field: "ProductName",
+                    title: "Tên bài viết",
+                    width: 400,
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                },
+                {
+                    width: 150,
+                    template: '<a onclick="ShowUpdate(#= ProductID #);" class="btn btn-xs btn-info"><i class="ace-icon fa fa-edit bigger-40"></i> SỬA</a>&nbsp;&nbsp;<a onclick="ShowDelete(#= ProductID #);" class="btn btn-xs btn-danger"><i class="ace-icon fa fa-trash bigger-40"></i> Xóa</a>',
+                    attributes: { style: "text-align: center; vertical-align: middle; ", },
+                    headerAttributes: {
+                        style: "text-align: center; vertical-align: middle; font-weight:bold;",
+                    }
+                }]
+            }).data("kendoGrid");
+        }
+
+        function Save() {
+            if ($.trim($('#txtProductName').val()) != '' && $('#cmbProductCategory').val() != '' &&
+                $('#cmbPlaceFrom').val() != '' && $('#cmbPlaceTo').val() != '' &&
+                $('#cmbBrand').val() != '')
+            {
+                if ($('#txtEditor').Editor("getText") != "" && $('#txtEditor').Editor("getText") != " " && $('#txtEditor').Editor("getText") != "<p>/<p>") {
+                    if ($('#lblProductID').text() == "") {
+                        SaveProduct();
+                        return false;
+                    }
+                    else {
+                        UpdateProduct();
+                        return false;
+                    }
+                }
+                else {
+                    ShowAlert('Thông báo', 'Vui lòng nhập nội dung bài viết vé - tour du lịch', 'info');
+                    return false;
+                }
+            }
+        }
+
+        function SaveProduct() {
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            var files = $("#imgImageUpload").get(0).files;
+            if (files.length > 0) {
+                fd.append("ImageFile", files[0]);
+                if (document.getElementById('rdbTicket').checked) {
+                    fd.append("ProductTypeID", 1);
+                }
+                else {
+                    fd.append("ProductTypeID", 2);
+                }
+                fd.append("ProductCategoryID", $('#cmbProductCategory').val());
+                var ProductCategoryID = $('#cmbProductCategory').val();
+                if (ProductCategoryID == 1) {
+                    fd.append("ProductGroupID", 1);
+                }
+                else if (ProductCategoryID == 2) {
+                    fd.append("ProductGroupID", 2);
+                }
+                else if (ProductCategoryID == 3) {
+                    if (document.getElementById('rdbDomestic').checked) {
+                        fd.append("ProductGroupID", 2);
+                    }
+                    else {
+                        fd.append("ProductGroupID", 1);
+                    }
+                }
+                fd.append("ProductName", $('#txtProductName').val());
+                fd.append("LeavingFrom", $('#cmbPlaceFrom').val());
+                fd.append("GoingTo", $('#cmbPlaceTo').val()); 
+                fd.append("BrandID", $('#cmbBrand').val());
+                fd.append("ProductEffectedDate", $('#daProductEffectedDate').val());
+                $('#txtProductPrice').unmask();
+                fd.append("ProductPrice", $('#txtProductPrice').val());
+                fd.append("ProductContent", $('#txtEditor').Editor("getText").replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+                fd.append("ProductStatus", $('#cmbProductStatus').val());
+                fd.append("LOAI", "INSERT");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/CapNhatVeTour',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function (html) {
+                        $('#loading').fadeOut();
+                        if (html == "...") {
+                            $(':input')
+                                .removeAttr('checked')
+                                .removeAttr('selected')
+                                .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                                .val('');
+                            $('#grid_List_Product').data('kendoGrid').dataSource.read();
+                            $('#divDomesticForeign').attr('style', 'display:none');
+                            ClearInput();
+                            ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                        }
+                        else {
+                            ShowAlert('Lỗi', html, 'error');
+                        }
+                    },
+                })
+                .fail(
+                    function (jqXHR, textStatus, err) {
+                        $('#loading').fadeOut();
+                        ShowAlert('Lỗi', err, 'error');
+                    }
+                );
+            }
+            else {
+                $('#loading').fadeOut();
+                ShowAlert('Thông báo', 'Vui lòng chọn hình ảnh', 'info');
+            }
+        }
+
+        function ShowUpdate(ProductID) {
+            var grid_data = $("#grid_List_Product").data("kendoGrid"),
+            data = grid_data.dataSource.data();
+
+            var res = $.grep(data, function (d) {
+                return d.ProductID == ProductID;
+            });
+
+            Select_List_PlaceFrom(res[0].LeavingFrom);
+            if (res[0].ProductGroupID == 1) {
+                Select_List_PlaceTo(true, res[0].GoingTo);
+                document.getElementById("rdbForeign").checked = true;
+            }
+            else if (res[0].ProductGroupID == 2) {
+                Select_List_PlaceTo(false, res[0].GoingTo);
+                document.getElementById("rdbDomestic").checked = true;
+            }
+
+            if (res[0].ProductCategoryID == 3) {
+                $('#divDomesticForeign').attr('style', 'display:block');
+            }
+            else {
+                $('#divDomesticForeign').attr('style', 'display:none');
+            }
+
+            if (res[0].ProductTypeID == 1) {
+                document.getElementById("rdbTicket").checked = true;
+            }
+            else {
+                document.getElementById("rdbTour").checked = true;
+            }
+
+            $('#lblProductID').text(ProductID);
+            $('#txtProductName').val(res[0].ProductName);
+            $('#daProductEffectedDate').val(res[0].ProductEffectedDate);
+            $('#txtProductPrice').val(res[0].ProductPrice);
+            $('#txtProductPrice').mask('#.##0', { reverse: true });
+            $('#cmbProductCategory').val(res[0].ProductCategoryID);
+            $('#cmbProductStatus').val(res[0].ProductStatus);
+            $('#cmbBrand').val(res[0].BrandID);
+            $('#txtEditor').Editor("setText", res[0].ProductContentDecode);
+            $('#lblProductImage').text(res[0].ProductImage);
+            var path = "../../" + res[0].ProductImage;
+            $('#divPreview').attr('src', path);
+            $('#divPreview').attr('style', 'display:block');
+            $('#divLastUpdatedDate').attr('style', 'display:block');
+            $('#divLastUpdatedBy').attr('style', 'display:block');
+            if (res[0].LastUpdatedDate == "" || res[0].LastUpdatedDate == null) {
+                $('#lblLastUpdatedDate').text(res[0].CreatedDate);
+            }
+            else {
+                $('#lblLastUpdatedDate').text(res[0].LastUpdatedDate);
+            }
+            if (res[0].LastUpdatedBy == "" || res[0].LastUpdatedBy == null) {
+                $('#lblLastUpdatedBy').text(res[0].CreatedBy);
+            }
+            else {
+                $('#lblLastUpdatedBy').text(res[0].LastUpdatedBy);
+            }
+        };
+
+        function UpdateProduct() {
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            var files = $('#imgImageUpload').get(0).files;
+            if (files.length > 0) {
+                fd.append("ImageFile", files[0]);
+            }
+            else {
+                fd.append("ProductImage", document.getElementById('lblProductImage').innerHTML);
+            }
+            fd.append("ProductID", $('#lblProductID').text());
+            if (document.getElementById('rdbTicket').checked) {
+                fd.append("ProductTypeID", 1);
+            }
+            else {
+                fd.append("ProductTypeID", 2);
+            }
+            fd.append("ProductCategoryID", $('#cmbProductCategory').val());
+            var ProductCategoryID = $('#cmbProductCategory').val();
+            if (ProductCategoryID == 1) {
+                fd.append("ProductGroupID", 1);
+            }
+            else if (ProductCategoryID == 2) {
+                fd.append("ProductGroupID", 2);
+            }
+            else if (ProductCategoryID == 3) {
+                if (document.getElementById('rdbDomestic').checked) {
+                    fd.append("ProductGroupID", 2);
+                }
+                else {
+                    fd.append("ProductGroupID", 1);
+                }
+            }
+            fd.append("ProductName", $('#txtProductName').val());
+            fd.append("LeavingFrom", $('#cmbPlaceFrom').val());
+            fd.append("GoingTo", $('#cmbPlaceTo').val());
+            fd.append("BrandID", $('#cmbBrand').val());
+            fd.append("ProductEffectedDate", $('#daProductEffectedDate').val());
+            $('#txtProductPrice').unmask();
+            fd.append("ProductPrice", $('#txtProductPrice').val());
+            fd.append("ProductContent", $('#txtEditor').Editor("getText").replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+            fd.append("ProductStatus", $('#cmbProductStatus').val());
+            fd.append("LOAI", "UPDATE");
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CapNhatVeTour',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        $('#lblProductID').text('');
+                        $('#lblProductImage').text('');
+                        $('#divLastUpdatedDate').attr('style', 'display:none');
+                        $('#divLastUpdatedBy').attr('style', 'display:none');
+                        $('#divDomesticForeign').attr('style', 'display:none');
+                        $('#grid_List_Product').data('kendoGrid').dataSource.read();
+                        ClearInput();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+        }
+
+        function ShowDelete(ProductID) {
+            $('#ProductID_Del').val(ProductID);
+
+            $('#myModalXoa').appendTo("body").modal('show');
+        }
+
+        function DeleteProduct() {
+            $('#myModalXoa').modal('hide');
+            $('#loading').fadeIn();
+            var fd = new FormData();
+            fd.append("ProductID", $('#ProductID_Del').val());
+            fd.append("LOAI", "DELETE");
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CapNhatVeTour',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (html) {
+                    $('#loading').fadeOut();
+                    if (html == "...") {
+                        $(':input')
+                            .removeAttr('checked')
+                            .removeAttr('selected')
+                            .not(':button, :submit, :reset, :hidden, :radio, :checkbox')
+                            .val('');
+                        $('#grid_List_Product').data('kendoGrid').dataSource.read();
+                        ShowAlert('Thông báo', 'Cập nhật thành công!', 'success');
+                    }
+                    else {
+                        ShowAlert('Lỗi', html, 'error');
+                    }
+                },
+            })
+            .fail(
+                function (jqXHR, textStatus, err) {
+                    $('#loading').fadeOut();
+                    ShowAlert('Lỗi', err, 'error');
+                }
+            );
+        };
+
+        function ClearInput() {
+            document.getElementById("rdbTicket").checked = true;
+            document.getElementById("cmbProductCategory").value = "";
+            $('#cmbPlaceFrom').empty();
+            $('#cmbPlaceTo').empty();
+            $('#divDomesticForeign').attr('style', 'display:none');
+            document.getElementById("txtProductName").value = "";
+            document.getElementById("cmbBrand").value = "";
+            document.getElementById("daProductEffectedDate").value = "";
+            document.getElementById("txtProductPrice").value = "";
+            document.getElementById("cmbProductStatus").value = "0";
+            document.getElementById("imgImageUpload").value = "";
+            $('#divPreview').attr('style', 'display:none');
+            $('#txtEditor').Editor("setText", '<p></p>');
+            $('#lblProductID').text('');
+            $('#lblProductImage').text('');
+            $('#divLastUpdatedDate').attr('style', 'display:none');
+            $('#divLastUpdatedBy').attr('style', 'display:none');
+        };
+    </script>
+}

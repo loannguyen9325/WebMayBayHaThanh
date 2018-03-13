@@ -1,0 +1,40 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="~/404/css/style.css" rel="stylesheet">
+    <link href="~/Layout/Home/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="~/Layout/Home/scripts/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="~/Layout/Home/scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    <!--start-wrap--->
+    <div class="wrap">
+        <!---start-header---->
+        <div class="header">
+            <div class="logo">
+                <h1><a href="#"></a></h1>
+            </div>
+        </div>
+        <!---End-header---->
+        <!--start-content------>
+        <div class="content">
+            <img src="../404/img/404-error.png" title="error" />
+            <p>Không tìm thấy trang bạn yêu cầu.</p>
+            <input type="button" id="btnback" class="btn btn-danger" value="TRỞ VỀ TRANG CHỦ" />
+        </div>
+        <!--End-Cotent------>
+    </div>
+    <!--End-wrap--->
+</body>
+</html>
+<script>
+    $('#btnback').click(function () {
+        window.location = '/';
+    });
+</script>

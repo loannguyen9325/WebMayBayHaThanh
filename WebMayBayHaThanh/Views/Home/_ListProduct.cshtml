@@ -1,0 +1,38 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<WebMayBayHaThanh.Models.mProduct>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+@foreach (var item in Model)
+{
+    <div class='col-lg-3 col-md-3 col-sm-6 col-xs-6 col-xxs-12'>
+        <div class='tm-home-box-2'>
+            @if (item.ProductStatus == 1)
+            {
+                <div class='ui-ribbon-wrapper'><div class='ui-ribbon'>HOT</div></div>
+            }
+            else if (item.ProductStatus == 2)
+            {
+                <div class='ui-ribbon-wrapper'><div class='ui-ribbon'>NEW</div></div>
+            }
+            else if (item.ProductStatus == 3)
+            {
+                <div class='ui-ribbon-wrapper'><div class='ui-ribbon'>SALE</div></div>
+            }
+            <a href='/Details?typ=1&id=@Html.DisplayFor(it => item.ProductID)'><img src='../../@Html.DisplayFor(it => item.ProductImage)' style='width:100%; height:70%' alt='image' class='img-responsive' /></a>
+            <div style='height:50px'><a href='/Details?typ=1&id=@Html.DisplayFor(it => item.ProductID)'><h3>@Html.DisplayFor(it => item.ProductName)</h3></a></div>
+            @if (item.ProductTypeID == 1)
+            {
+                <p class='tm-date' style='font-size:12px'><i style='width:15px'></i><span>Vé Du Lịch</span><span style='float:right'><i class='fa fa-clock-o'></i>&nbsp;@Html.DisplayFor(it => item.CreatedDate)</span></p>
+            }
+            else if (item.ProductTypeID == 2)
+            {
+                <p class='tm-date' style='font-size:12px'><i style='width:15px'></i><span>Tour Du Lịch</span><span style='float:right'><i class='fa fa-clock-o'></i>&nbsp;@Html.DisplayFor(it => item.CreatedDate)</span></p>
+            }
+</div>
+    </div>
+}
+<div class="col-lg-12 col-xs-12 col-md-12" style="text-align:center;">
+    @if (Model != null)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("TicketAndTour", "Home", new { page }))
+    }
+</div>

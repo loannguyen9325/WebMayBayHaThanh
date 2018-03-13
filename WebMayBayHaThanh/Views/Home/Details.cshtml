@@ -1,0 +1,365 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "Chi tiết bài viết";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section css {
+    <style>
+        .flexslider.flexslider-banner .slides img {
+            display: block;
+            width: 100%;
+            max-height: 460px;
+        }
+    </style>
+}
+
+<section class="tm-banner">
+    <div class="flexslider flexslider-banner">
+        <ul class="slides">
+            @{
+                DataTable _tb = Session["ActiveBanner"] as DataTable;
+                foreach (DataRow rnhom in _tb.Rows)
+                {
+                    <li>
+                        @*<div class="tm-banner-inner">
+                                <a onclick="ShowPopup();" class="tm-banner-link">Tra cứu vé</a>
+                            </div>*@
+                        <img src="../../@rnhom["BannerUrl"]" alt="Image" />
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</section>
+
+<div class="modal fade" id="myModalPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#fff; background-color:#F5D338;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Lưu ý</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ProductID_Del" />
+                <span id="alertxoa">
+                    Thông tin tra cứu được từ trang web bạn đang truy cập chỉ mang tính chất tham khảo.<br />
+                    Vui lòng liên hệ số điện thoại <label id="lblPhone"></label> để được tư vấn và đặt vé.
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-info" style="background-color:#F9E58B; border-color:#F5D338; color:#000" onclick="HidePopup();"><i class="ace-icon fa fa-check bigger-40"></i> OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="tm-white-bg section-padding-bottom" style="min-height:1000px">
+    <div class="container">
+        <div class="row">
+            <div class="tm-section-header1">
+            </div>
+        </div>
+        <div id="divDetails" class="row" style="min-height:750px"></div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="tm-section-header section-margin-top">
+                <div class="col-lg-1 col-md-1 col-sm-1"><hr></div>
+                <div class="col-lg-3 col-md-3 col-sm-3"><h3 class="tm-section-title1">Bài Viết Liên Quan</h3></div>
+                <div class="col-lg-8 col-md-8 col-sm-8"><hr></div>
+            </div>
+        </div>
+        <div id="divTop4RelatedPost" class="row"></div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(window).load(function() {
+		    $('.flexslider').flexslider({
+			    controlNav: false
+		    });
+        });
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.href);
+            if (results == null)
+                return "";
+            else
+                return decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        $(document).ready(function () {
+            //Select_Top2_Consultant();
+            var TypeID = getParameterByName("typ");
+            if (TypeID == '') {
+                TypeID = getParameterByName("TYP");
+                if (TypeID == '') {
+                    TypeID = getParameterByName("Typ");
+                    if (TypeID == '') {
+                        TypeID = getParameterByName("tYp");
+                        if (TypeID == '') {
+                            TypeID = getParameterByName("tyP");
+                            if (TypeID == '') {
+                                TypeID = getParameterByName("TYp");
+                                if (TypeID == '') {
+                                    TypeID = getParameterByName("tYP");
+                                    if (TypeID == '') {
+                                        TypeID = getParameterByName("TyP");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            var ID = getParameterByName("id");
+            if (ID == '') {
+                ID = getParameterByName("ID");
+                if (ID == '') {
+                    ID = getParameterByName("Id");
+                    if (ID == '') {
+                        ID = getParameterByName("iD");
+                    }
+                }
+            }
+
+            if (TypeID == 1 || TypeID == 2 || TypeID == 3)
+            {
+                LoadDetails(TypeID, ID);
+                Select_Top4_Related_Post(TypeID, ID);
+            }
+            else
+            {
+                window.location = '/Errors/General';
+            }
+        });
+
+        function LoadDetails(TypeID, ID) {
+            if (TypeID == 1) {
+                $('#divDetails').html('');
+                $.getJSON("/Home/Select_Product_By_ID", { ProductID: ID })
+                .done(function (data) {
+                    if (data.length > 0) {
+                        var strList = "";
+                        $.each(data, function (key, item) {
+                            strList += "<div class='col-lg-3 col-md-3 col-sm-5 col-xs-5 col-xxs-12'>";
+                            strList += "<div class='tm-home-box-2-details'>";
+                            if (item.ProductStatus == 1) {
+                                strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>HOT</div></div>";
+                            }
+                            else if (item.ProductStatus == 2) {
+                                strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>NEW</div></div>";
+                            }
+                            else if (item.ProductStatus == 3) {
+                                strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>SALE</div></div>";
+                            }
+                            strList += "<img src='../../" + item.ProductImage + "' style='width:100%; height:100%' alt='image' class='img-responsive'/>";
+                            strList += "</div>";
+                            strList += "</div>";
+                            strList += "<div class='col-lg-9 col-md-9 col-sm-7 col-xs-7 col-xxs-12' style='margin-bottom:30px'>";
+                            strList += "<div><span style='color:#FCDD44; font-size:30px'>" + item.ProductName + "</span></div>"
+                            strList += "<p style='color:#999999'>";
+                            if (item.ProductTypeID == 1) {
+                                strList += "<i class='fa fa-clock-o'></i>&nbsp;&nbsp;" + item.CreatedDate + "&nbsp;&nbsp;|&nbsp;&nbsp;Vé Du Lịch";
+                            }
+                            else if (item.ProductTypeID == 2) {
+                                strList += "<i class='fa fa-clock-o'></i>&nbsp;&nbsp;" + item.CreatedDate + "&nbsp;&nbsp;|&nbsp;&nbsp;Tour Du Lịch";
+                            }
+                            strList += "</p>";
+                            strList += "<div style='margin-top:15px; font-size:18px'><span>" + item.LeavingFromName + "&nbsp;&nbsp;<i class='fa fa-long-arrow-right'></i>&nbsp;&nbsp;" + item.GoingToName + "</span></div>";
+                            if (item.BrandName != "")
+                            {
+                                strList += "<div style='margin-top:20px; font-size:13px'><span>Hãng bay: " + item.BrandName + "</span></div>";
+                            }
+                            else
+                            {
+                                strList += "<div style='margin-top:20px; font-size:13px'><span>Hãng bay: Đang được cập nhật</span></div>";
+                            }
+                            if (item.ProductEffectedDate != "")
+                            {
+                                strList += "<div style='margin-top:15px; font-size:13px'><span>Ngày áp dụng: " + item.ProductEffectedDate + "</span></div>";
+                            }
+                            else
+                            {
+                                strList += "<div style='margin-top:15px; font-size:13px'><span>Ngày áp dụng: Đang được cập nhật</span></div>";
+                            }
+                            if (item.FormattedProductPrice != 0) {
+                                strList += "<div style='margin-top:15px; font-size:18px'><span>Giá: <font color='red'>" + item.FormattedProductPrice + " VND</font></span></div>";
+                            }
+                            else
+                            {
+                                strList += "<div style='margin-top:15px; font-size:18px'><span>Giá: <font color='red'>Liên hệ</font></span></div>";
+                            }
+                            strList += "</div>";
+                            strList += "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12' style='overflow-x:hidden'>";
+                            if (item.ProductContentDecode == "" || item.ProductContentDecode == " ") {
+                                strList += "<div style='font-size:14px'>Nội dung bài viết đang được cập nhật</div>";
+                            }
+                            else
+                            {
+                                strList += "<div style='font-size:14px'>" + item.ProductContentDecode + "</div>";
+                            }
+                            strList += "</div>";
+                            $('#divDetails').html(strList);
+                        });
+                    }
+                    else {
+                        window.location = '/Errors/General';
+                    }
+                })
+            }
+            else if (TypeID == 2) {
+                $('#divDetails').html('');
+                $.getJSON("/Home/Select_Visa_By_ID", { VisaID: ID })
+                .done(function (data) {
+                    if (data.length > 0) {
+                        var strList = "";
+                        $.each(data, function (key, item) {
+                            strList += "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12' style='color:#FCDD44; font-size:30px'>" + item.VisaTitle + "</div>";
+                            strList += "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12' style='color:#999999'><i class='fa fa-clock-o'></i>&nbsp;&nbsp;" + item.CreatedDate + "</div>";
+                            strList += "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12' style='margin-top:40px;overflow-x:hidden'>";
+                            if (item.VisaContentDecode == "" || item.VisaContentDecode == " ") {
+                                strList += "<div style='font-size:14px'>Nội dung bài viết đang được cập nhật</div>";
+                            }
+                            else {
+                                strList += "<div style='font-size:14px'>" + item.VisaContentDecode + "</div>";
+                            }
+                            strList += "</div>";
+                            $('#divDetails').html(strList);
+                        });
+                    }
+                    else {
+                        window.location = '/Errors/General';
+                    }
+                })
+            }
+            else if (TypeID == 3) {
+                $('#divDetails').html('');
+                $.getJSON("/Home/Select_News_By_ID", { NewsID: ID })
+                .done(function (data) {
+                    if (data.length > 0) {
+                        var strList = "";
+                        $.each(data, function (key, item) {
+                            strList += "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12' style='color:#FCDD44; font-size:30px'>" + item.NewsTitle + "</div>";
+                            strList += "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12' style='color:#999999'><i class='fa fa-clock-o'></i>&nbsp;&nbsp;" + item.CreatedDate + "</div>";
+                            strList += "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12' style='margin-top:40px;overflow-x:hidden'>";
+                            if (item.NewsContentDecode == "" || item.NewsContentDecode == " ") {
+                                strList += "<div style='font-size:14px'>Nội dung bài viết đang được cập nhật</div>";
+                            }
+                            else {
+                                strList += "<div style='font-size:14px'>" + item.NewsContentDecode + "</div>";
+                            }
+                            strList += "</div>";
+                            $('#divDetails').html(strList);
+                        });
+                    }
+                    else {
+                        window.location = '/Errors/General';
+                    }
+                })
+            }
+        }
+
+        function Select_Top4_Related_Post(TypeID, ID) {
+            if (TypeID == 1) {
+                $('#divTop4RelatedPost').html('');
+                $.getJSON("/Home/Select_Top4_Related_Post_Product", { ProductID: ID })
+                .done(function (data) {
+                    if (data.length > 0) {
+                        var strList = "";
+                        $.each(data, function (key, item) {
+                            strList += "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-6 col-xxs-12'>";
+                            strList += "<div class='tm-home-box-2'>";
+                            if (item.ProductStatus == 1) {
+                                strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>HOT</div></div>";
+                            }
+                            else if (item.ProductStatus == 2) {
+                                strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>NEW</div></div>";
+                            }
+                            else if (item.ProductStatus == 3) {
+                                strList += "<div class='ui-ribbon-wrapper'><div class='ui-ribbon'>SALE</div></div>";
+                            }
+                            strList += "<a href='/Details?typ=1&id=" + item.ProductID + "'><img src='../../" + item.ProductImage + "' style='width:100%; height:70%' alt='image' class='img-responsive'/></a>";
+                            strList += "<div style='height:50px'><a href='/Details?typ=1&id=" + item.ProductID + "'><h3>" + item.ProductName + "</h3></a></div>";
+                            strList += "<p class='tm-date' style='font-size:12px'><i style='width:15px'></i><span><i class='fa fa-plane'></i>&nbsp;" + item.ProductCategoryName + "</span><span style='float:right'><i class='fa fa-clock-o'></i>&nbsp;" + item.CreatedDate + "</span></p>";
+                            strList += "</div>";
+                            strList += "</div>";
+                            $('#divTop4RelatedPost').html(strList);
+                        });
+                    }
+                })
+            }
+            else if (TypeID == 2) {
+                $('#divTop4RelatedPost').html('');
+                $.getJSON("/Home/Select_Top4_Related_Post_Visa", { VisaID: ID })
+                .done(function (data) {
+                    if (data.length > 0) {
+                        var strList = "";
+                        $.each(data, function (key, item) {
+                            strList += "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-6 col-xxs-12'>";
+                            strList += "<div class='tm-home-box-2'>";
+                            strList += "<a href='/Details?typ=2&id=" + item.VisaID + "'><img src='../../" + item.VisaImage + "' style='width:100%; height:70%' alt='image' class='img-responsive'/></a>";
+                            strList += "<div style='height:50px'><a href='/Details?typ=2&id=" + item.VisaID + "'><h3>" + item.VisaTitle + "</h3></a></div>";
+                            strList += "<p class='tm-date' style='font-size:12px'><i style='width:15px'></i><span>&nbsp;</span><span style='float:right'><i class='fa fa-clock-o'></i>&nbsp;" + item.CreatedDate + "</span></p>";
+                            strList += "</div>";
+                            strList += "</div>";
+                            $('#divTop4RelatedPost').html(strList);
+                        });
+                    }
+                })
+            }
+            else if (TypeID == 3) {
+                $('#divTop4RelatedPost').html('');
+                $.getJSON("/Home/Select_Top4_Related_Post_News", { NewsID: ID })
+                .done(function (data) {
+                    if (data.length > 0) {
+                        var strList = "";
+                        $.each(data, function (key, item) {
+                            strList += "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-6 col-xxs-12'>";
+                            strList += "<div class='tm-home-box-2'>";
+                            strList += "<a href='/Details?typ=3&id=" + item.NewsID + "'><img src='../../" + item.NewsImage + "' style='width:100%; height:70%' alt='image' class='img-responsive'/></a>";
+                            strList += "<div style='height:50px'><a href='/Details?typ=3&id=" + item.NewsID + "'><h3>" + item.NewsTitle + "</h3></a></div>";
+                            strList += "<p class='tm-date' style='font-size:12px'><i style='width:15px'></i><span>&nbsp;</span><span style='float:right'><i class='fa fa-clock-o'></i>&nbsp;" + item.CreatedDate + "</span></p>";
+                            strList += "</div>";
+                            strList += "</div>";
+                            $('#divTop4RelatedPost').html(strList);
+                        });
+                    }
+                })
+            }
+        }
+
+        function Select_Top2_Consultant() {
+            $.getJSON("/Home/Select_Top2_Consultant")
+            .done(function (data) {
+                if (data.length > 0) {
+                    var strPhone = "";
+                    $.each(data, function (key, item) {
+                        if (item.PhoneNo != "") {
+                            strPhone += item.PhoneNo + " - ";
+                        }
+                    });
+                    $('#lblPhone').text(strPhone.substring(0, strPhone.length - 3));
+                }
+            })
+        }
+
+        function ShowPopup() {
+            $('#myModalPopup').appendTo("body").modal('show');
+        }
+
+        function HidePopup() {
+            $('#myModalPopup').modal('hide');
+            location.href = "https://www.google.com/flights/?f=0&gl";
+            location.target = "_blank";
+            return false;
+        }
+    </script>
+}
